@@ -1,0 +1,26 @@
+{
+  "name": "temp-email-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/server.ts",
+    "test": "bun test",
+    "build": "bun build src/server.ts --outdir=dist --target=bun",
+    "start": "bun dist/server.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.10.0",
+    "bullmq": "^5.23.3",
+    "ioredis": "^5.4.1",
+    "meilisearch": "^0.44.1",
+    "smtp-server": "^3.13.4",
+    "mailparser": "^3.7.1",
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/ws": "^8.5.13",
+    "bun-types": "latest"
+  }
+}

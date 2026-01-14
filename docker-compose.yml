@@ -1,0 +1,46 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: temp-email-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: temp-email
+    networks:
+      - temp-email-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: temp-email-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - temp-email-network
+    restart: unless-stopped
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.10
+    container_name: temp-email-meilisearch
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_ENV: development
+      MEILI_NO_ANALYTICS: true
+    volumes:
+      - meili_data:/meili_data
+    networks:
+      - temp-email-network
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+    driver: local
+  meili_data:
+    driver: local
+
+networks:
+  temp-email-network:
+    driver: bridge

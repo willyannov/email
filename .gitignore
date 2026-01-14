@@ -1,0 +1,124 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+bun.lockb
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+public/dist/
+.next/
+out/
+.vercel/
+.netlify/
+
+# Cache
+.cache/
+.parcel-cache/
+.turbo/
+.nuxt/
+.output/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+logs/
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+.jest-cache/
+
+# Temp files
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*.cache
+
+# Email attachments (local storage)
+uploads/
+attachments/
+
+# Docker volumes
+mongo_data/
+meili_data/
+redis_data/
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Sentry
+.sentryclirc
+
+# TypeScript
+*.tsbuildinfo
+.tsbuildinfo
+
+# Next.js
+.next/
+out/
+
+# Misc
+.DS_Store
+*.pem
+.vercel
+.turbo
+.contentlayer
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local development
+.vscode-test/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Figma exports (optional - já temos em logs/)
+logs/figma-raw.json
+logs/figma-simplified.json
