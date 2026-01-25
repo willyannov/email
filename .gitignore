@@ -97,6 +97,26 @@ redis_data/
 *.tsbuildinfo
 .tsbuildinfo
 
+# Secrets e Credenciais (NUNCA SUBIR!)
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+.aws/
+.azure/
+.gcloud/
+
+# Configurações locais de desenvolvimento
+.env.backup
+.env.*.backup
+config.local.js
+config.local.ts
+
+# Documentação Markdown
+*.md
+*.MD
+
 # Next.js
 .next/
 out/
