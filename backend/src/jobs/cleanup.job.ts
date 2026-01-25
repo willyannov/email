@@ -46,10 +46,9 @@ export const cleanupWorker = new Worker(
           .deleteMany({ mailboxId: mailbox._id });
         cleanedEmails += deleteResult.deletedCount;
 
-        // Marcar mailbox como inativa
-        await db.collection('mailboxes').updateOne(
-          { _id: mailbox._id },
-          { $set: { isActive: false } }
+        // Deletar mailbox permanentemente
+        await db.collection('mailboxes').deleteOne(
+          { _id: mailbox._id }
         );
 
         cleanedMailboxes++;
