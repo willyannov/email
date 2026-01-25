@@ -20,17 +20,20 @@ export async function connectToDatabase(): Promise<Db> {
     // Adicionar database name se não estiver presente
     let finalUri = uri;
     if (uri.includes('mongodb.net/') || uri.includes('mongodb+srv://')) {
-      // Garantir que tem o database name
-      if (!uri.includes('mongodb.net/tempmail') && !uri.includes('mongodb.net/?')) {
-        finalUri = uri.replace('mongodb.net/', 'mongodb.net/tempmail');
-      } else if (uri.includes('mongodb.net/?')) {
+      // Garantir que tem o database name "tempmail"
+      // Casos: .net/ ou .net/? ou .net/?appName=...
+      if (uri.includes('mongodb.net/?')) {
+        // Caso: mongodb.net/? ou mongodb.net/?appName=...
         finalUri = uri.replace('mongodb.net/?', 'mongodb.net/tempmail?');
+      } else if (!uri.includes('mongodb.net/tempmail') && uri.includes('mongodb.net/')) {
+        // Caso: mongodb.net/ (sem nada depois)
+        finalUri = uri.replace('mongodb.net/', 'mongodb.net/tempmail/');
       }
       
       // Adicionar parâmetros TLS se não estiverem presentes
       if (!finalUri.includes('retryWrites')) {
         const separator = finalUri.includes('?') ? '&' : '?';
-        finalUri += `${separator}retryWrites=true&w=majority&tls=true`;
+        finalUri += `${separator}retryWrites=true&w=majority`;
       }
     }
     
@@ -72,10 +75,11 @@ export async function connectToDatabase(): Promise<Db> {
         let finalUri = uri;
         
         if (uri.includes('mongodb.net/') || uri.includes('mongodb+srv://')) {
-          if (!uri.includes('mongodb.net/tempmail') && !uri.includes('mongodb.net/?')) {
-            finalUri = uri.replace('mongodb.net/', 'mongodb.net/tempmail');
-          } else if (uri.includes('mongodb.net/?')) {
+          // Garantir que tem o database name "tempmail"
+          if (uri.includes('mongodb.net/?')) {
             finalUri = uri.replace('mongodb.net/?', 'mongodb.net/tempmail?');
+          } else if (!uri.includes('mongodb.net/tempmail') && uri.includes('mongodb.net/')) {
+            finalUri = uri.replace('mongodb.net/', 'mongodb.net/tempmail/');
           }
           
           const separator = finalUri.includes('?') ? '&' : '?';
