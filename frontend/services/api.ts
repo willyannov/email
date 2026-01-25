@@ -1,4 +1,7 @@
+// API Base URL - configurável via variável de ambiente
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+
+console.log('🔧 API_BASE_URL:', API_BASE_URL);
 
 export interface CreateMailboxInput {
   customPrefix?: string;
