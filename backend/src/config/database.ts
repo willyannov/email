@@ -16,39 +16,43 @@ export async function connectToDatabase(): Promise<Db> {
     const uri = getMongoUri();
     
     console.log('🔌 Tentando conectar ao MongoDB...');
+    console.log('📍 URI original (mascarada):', uri.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@'));
     
     // Adicionar database name se não estiver presente
     let finalUri = uri;
     if (uri.includes('mongodb.net/') || uri.includes('mongodb+srv://')) {
       // Garantir que tem o database name "tempmail"
-      // Casos: .net/ ou .net/? ou .net/?appName=...
       if (uri.includes('mongodb.net/?')) {
-        // Caso: mongodb.net/? ou mongodb.net/?appName=...
         finalUri = uri.replace('mongodb.net/?', 'mongodb.net/tempmail?');
       } else if (!uri.includes('mongodb.net/tempmail') && uri.includes('mongodb.net/')) {
-        // Caso: mongodb.net/ (sem nada depois)
         finalUri = uri.replace('mongodb.net/', 'mongodb.net/tempmail/');
       }
       
-      // Adicionar parâmetros TLS se não estiverem presentes
-      if (!finalUri.includes('retryWrites')) {
+      // Adicionar parâmetros apenas se não existirem
+      const params: string[] = [];
+      if (!finalUri.includes('retryWrites')) params.push('retryWrites=true');
+      if (!finalUri.includes('w=')) params.push('w=majority');
+      if (!finalUri.includes('tls=')) params.push('tls=true');
+      
+      if (params.length > 0) {
         const separator = finalUri.includes('?') ? '&' : '?';
-        finalUri += `${separator}retryWrites=true&w=majority`;
+        finalUri += separator + params.join('&');
       }
     }
     
-    console.log('📝 Connection string preparada');
+    console.log('📝 URI preparada (mascarada):', finalUri.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@'));
     
-    // Configurações compatíveis com Node.js Alpine + MongoDB Atlas
+    // Configurações TLS explícitas para MongoDB Atlas
     client = new MongoClient(finalUri, {
       serverSelectionTimeoutMS: 30000,
       connectTimeoutMS: 30000,
       socketTimeoutMS: 45000,
       maxPoolSize: 10,
       minPoolSize: 2,
-      retryWrites: true,
-      retryReads: true,
-      // Não especificar TLS aqui - deixar a URL decidir
+      ssl: true,
+      sslValidate: true,
+      tlsAllowInvalidCertificates: false,
+      tlsAllowInvalidHostnames: false,
     });
     
     await client.connect();
@@ -67,28 +71,41 @@ export async function connectToDatabase(): Promise<Db> {
   } catch (error) {
     console.error('❌ Erro ao conectar ao MongoDB:', error);
     
-    // Tentar novamente sem verificação de certificado (fallback)
-    if (error instanceof Error && error.message.includes('SSL')) {
+    // Tentar com TLS relaxado (fallback para problemas de certificado)
+    if (error instanceof Error && (error.message.includes('SSL') || error.message.includes('TLS'))) {
       console.log('⚠️ Tentando conectar com TLS relaxado...');
       try {
         const uri = getMongoUri();
         let finalUri = uri;
         
         if (uri.includes('mongodb.net/') || uri.includes('mongodb+srv://')) {
-          // Garantir que tem o database name "tempmail"
           if (uri.includes('mongodb.net/?')) {
             finalUri = uri.replace('mongodb.net/?', 'mongodb.net/tempmail?');
           } else if (!uri.includes('mongodb.net/tempmail') && uri.includes('mongodb.net/')) {
             finalUri = uri.replace('mongodb.net/', 'mongodb.net/tempmail/');
           }
           
-          const separator = finalUri.includes('?') ? '&' : '?';
-          finalUri += `${separator}retryWrites=true&w=majority&tlsAllowInvalidCertificates=true`;
+          // Adicionar apenas o que falta
+          const params: string[] = [];
+          if (!finalUri.includes('tlsAllowInvalidCertificates')) {
+            params.push('tlsAllowInvalidCertificates=true');
+          }
+          if (!finalUri.includes('retryWrites')) params.push('retryWrites=true');
+          if (!finalUri.includes('w=')) params.push('w=majority');
+          
+          if (params.length > 0) {
+            const separator = finalUri.includes('?') ? '&' : '?';
+            finalUri += separator + params.join('&');
+          }
         }
+        
+        console.log('📝 URI retry (mascarada):', finalUri.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@'));
         
         client = new MongoClient(finalUri, {
           serverSelectionTimeoutMS: 30000,
           connectTimeoutMS: 30000,
+          ssl: true,
+          sslValidate: false,
         });
         
         await client.connect();

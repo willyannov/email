@@ -32,10 +32,11 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Instalar OpenSSL, certificados CA e dependências de runtime
+# Instalar OpenSSL, certificados CA e atualizar
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     openssl \
+    && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar apenas package.json e package-lock.json (se existir)
