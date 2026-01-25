@@ -140,10 +140,15 @@ async function startServer() {
           console.error('⚠️ Erro ao inicializar workers:', err)
         );
         
-        // Inicializar servidor SMTP
-        smtpServer = new CustomSMTPServer(wsService);
-        smtpServer.listen(SMTP_PORT);
-        console.log(`📧 Servidor SMTP rodando na porta ${SMTP_PORT}`);
+        // Inicializar servidor SMTP (opcional - pode falhar se porta bloqueada)
+        try {
+          smtpServer = new CustomSMTPServer(wsService);
+          smtpServer.listen(SMTP_PORT);
+          console.log(`📧 Servidor SMTP rodando na porta ${SMTP_PORT}`);
+        } catch (error) {
+          console.warn('⚠️ Não foi possível iniciar servidor SMTP:', error);
+          console.log('ℹ️ Sistema continuará sem recebimento direto de emails via SMTP');
+        }
       })
       .catch(err => {
         console.error('❌ Erro ao conectar serviços:', err);
