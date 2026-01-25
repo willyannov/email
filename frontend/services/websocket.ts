@@ -21,10 +21,20 @@ class WebSocketClient {
    * Connect to WebSocket server
    */
   connect(token: string, onMessage?: MessageHandler): void {
-    if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
-      if (this.token === token && this.ws.readyState === WebSocket.OPEN) {
+    // Se já temos uma conexão ativa com o mesmo token, apenas adiciona o handler
+    if (this.ws && this.token === token) {
+      if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
+        console.log('🔄 WebSocket já conectado/conectando para este token, reutilizando conexão');
+        if (onMessage && !this.messageHandlers.includes(onMessage)) {
+          this.messageHandlers.push(onMessage);
+        }
         return;
       }
+    }
+
+    // Se temos uma conexão com token diferente ou não está fechada, desconecta primeiro
+    if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
+      console.log('🔄 Desconectando WebSocket anterior antes de criar nova conexão');
       this.disconnect();
     }
 
