@@ -42,6 +42,12 @@ export async function connectToDatabase(): Promise<Db> {
     
     console.log('📝 URI preparada (mascarada):', finalUri.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@'));
     
+    // Verificar se deve permitir certificados inválidos (via env var)
+    const allowInvalidTLS = process.env.ALLOW_INVALID_TLS === 'true';
+    if (allowInvalidTLS) {
+      console.log('⚠️ TLS validation disabled via ALLOW_INVALID_TLS=true');
+    }
+    
     // Configurações TLS explícitas para MongoDB Atlas
     client = new MongoClient(finalUri, {
       serverSelectionTimeoutMS: 30000,
@@ -50,9 +56,9 @@ export async function connectToDatabase(): Promise<Db> {
       maxPoolSize: 10,
       minPoolSize: 2,
       ssl: true,
-      sslValidate: true,
-      tlsAllowInvalidCertificates: false,
-      tlsAllowInvalidHostnames: false,
+      sslValidate: !allowInvalidTLS,
+      tlsAllowInvalidCertificates: allowInvalidTLS,
+      tlsAllowInvalidHostnames: allowInvalidTLS,
     });
     
     await client.connect();
