@@ -50,7 +50,7 @@ export async function setupMeilisearchIndexes() {
       console.log('✅ Configurações do índice aplicadas');
     }
   } catch (error) {
-    console.error('❌ Erro ao configurar Meilisearch:', error);
-    throw error;
+    console.error('⚠️ Erro ao configurar Meilisearch:', error);
+    console.log('ℹ️ Meilisearch é opcional - continuando sem busca avançada');
   }
 }

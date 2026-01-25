@@ -4,17 +4,27 @@ import { Email } from '../models/Email.js';
 import { ObjectId } from 'mongodb';
 
 export class SearchService {
-  private client: MeiliSearch;
+  private client: MeiliSearch | null = null;
   private indexName = 'emails';
 
   constructor() {
-    this.client = getMeilisearchClient();
+    try {
+      this.client = getMeilisearchClient();
+    } catch (error) {
+      console.warn('⚠️ Meilisearch não disponível - busca avançada desabilitada');
+      this.client = null;
+    }
   }
 
   /**
    * Indexa um email no Meilisearch
    */
   async indexEmail(email: Email): Promise<void> {
+    if (!this.client) {
+      console.debug('Meilisearch não disponível - pulando indexação');
+      return;
+    }
+    
     try {
       const index = this.client.index(this.indexName);
 
@@ -28,7 +38,7 @@ export class SearchService {
       }]);
     } catch (error) {
       console.error('Erro ao indexar email no Meilisearch:', error);
-      throw error;
+      // Não propaga o erro - indexação é opcional
     }
   }
 
@@ -49,6 +59,11 @@ export class SearchService {
     }>;
     total: number;
   }> {
+    if (!this.client) {
+      console.warn('Meilisearch não disponível - retornando resultado vazio');
+      return { hits: [], total: 0 };
+    }
+    
     try {
       const index = this.client.index(this.indexName);
 
@@ -65,7 +80,7 @@ export class SearchService {
       };
     } catch (error) {
       console.error('Erro ao buscar emails no Meilisearch:', error);
-      throw error;
+      return { hits: [], total: 0 };
     }
   }
 
@@ -73,6 +88,8 @@ export class SearchService {
    * Remove um email do índice
    */
   async deleteEmail(emailId: string): Promise<void> {
+    if (!this.client) return;
+    
     try {
       const index = this.client.index(this.indexName);
       await index.deleteDocument(emailId);
@@ -86,6 +103,8 @@ export class SearchService {
    * Remove todos os emails de uma mailbox do índice
    */
   async deleteMailboxEmails(mailboxId: string): Promise<void> {
+    if (!this.client) return;
+    
     try {
       const index = this.client.index(this.indexName);
       await index.deleteDocuments({
