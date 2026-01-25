@@ -1,7 +1,7 @@
 import { Queue, Worker } from 'bullmq';
-import { getRedisClient } from '../config/redis';
-import { SearchService } from '../services/search.service';
-import { Email } from '../models/Email';
+import { getRedisClient } from '../config/redis.js';
+import { SearchService } from '../services/search.service.js';
+import { Email } from '../models/Email.js';
 
 const QUEUE_NAME = 'indexer';
 const searchService = new SearchService();

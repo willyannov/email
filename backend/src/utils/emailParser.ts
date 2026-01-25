@@ -25,7 +25,7 @@ export async function parseEmail(emailStream: Readable): Promise<ParsedEmail> {
   // Extrair destinatários
   const toAddresses = parsed.to
     ? Array.isArray(parsed.to)
-      ? parsed.to.map(addr => addr.value?.[0]?.address || '').filter(Boolean)
+      ? parsed.to.map((addr: any) => addr.value?.[0]?.address || '').filter(Boolean)
       : [parsed.to.value?.[0]?.address || ''].filter(Boolean)
     : [];
 
@@ -94,7 +94,7 @@ export async function parseEmail(emailStream: Readable): Promise<ParsedEmail> {
     hasText: !!textBody,
     hasHtml: !!htmlBody,
     textLength: textBody?.length,
-    htmlLength: htmlBody?.length,
+    htmlLength: typeof htmlBody === 'string' ? htmlBody.length : 0,
   });
 
   return {

@@ -1,5 +1,5 @@
-import { MailboxService } from '../services/mailbox.service';
-import { CreateMailboxSchema, MailboxTokenSchema } from '../utils/validation';
+import { MailboxService } from '../services/mailbox.service.js';
+import { CreateMailboxSchema, MailboxTokenSchema } from '../utils/validation.js';
 
 const mailboxService = new MailboxService();
 

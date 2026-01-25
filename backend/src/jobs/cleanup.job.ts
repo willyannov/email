@@ -1,9 +1,9 @@
 import { Queue, Worker, QueueEvents } from 'bullmq';
-import { getRedisClient } from '../config/redis';
-import { MailboxService } from '../services/mailbox.service';
-import { getDatabase } from '../config/database';
-import { deleteAttachments } from '../utils/attachmentStorage';
-import { Email } from '../models/Email';
+import { getRedisClient } from '../config/redis.js';
+import { MailboxService } from '../services/mailbox.service.js';
+import { getDatabase } from '../config/database.js';
+import { deleteAttachments } from '../utils/attachmentStorage.js';
+import { Email } from '../models/Email.js';
 
 const QUEUE_NAME = 'cleanup';
 const mailboxService = new MailboxService();
@@ -36,7 +36,7 @@ export const cleanupWorker = new Worker(
         // Deletar anexos
         for (const email of emails) {
           if (email.attachments.length > 0) {
-            const attachmentPaths = email.attachments.map(a => a.path);
+            const attachmentPaths = email.attachments.map((a: any) => a.path);
             await deleteAttachments(attachmentPaths);
           }
         }

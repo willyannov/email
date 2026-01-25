@@ -1,11 +1,11 @@
-import { connectToDatabase, closeDatabaseConnection } from './config/database';
-import { getRedisClient, closeRedisConnection } from './config/redis';
-import { setupMeilisearchIndexes } from './config/meilisearch';
-import { CustomSMTPServer } from './services/smtp.service';
-import { WebSocketService } from './services/websocket.service';
-import { createRouter } from './router';
-import { scheduleCleanupJob, cleanupWorker } from './jobs/cleanup.job';
-import { indexerWorker } from './jobs/indexer.job';
+import { connectToDatabase, closeDatabaseConnection } from './config/database.js';
+import { getRedisClient, closeRedisConnection } from './config/redis.js';
+import { setupMeilisearchIndexes } from './config/meilisearch.js';
+import { CustomSMTPServer } from './services/smtp.service.js';
+import { WebSocketService } from './services/websocket.service.js';
+import { createRouter } from './router.js';
+import { scheduleCleanupJob, cleanupWorker } from './jobs/cleanup.job.js';
+import { indexerWorker } from './jobs/indexer.job.js';
 
 const PORT = parseInt(process.env.PORT || '3000');
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '2525');
@@ -32,7 +32,10 @@ async function startServer() {
     
     // Inicializar servidor HTTP com WebSocket
     const router = createRouter(wsService);
-    const httpServer = Bun.serve({
+    
+    type WebSocketData = { token: string };
+    
+    const httpServer = Bun.serve<WebSocketData>({
       port: PORT,
       fetch: async (req: Request, server) => {
         const url = new URL(req.url);
@@ -42,7 +45,7 @@ async function startServer() {
           const token = url.pathname.split('/').pop();
           
           const success = server.upgrade(req, {
-            data: { token },
+            data: { token: token || '' },
           });
           
           if (success) {
@@ -59,16 +62,16 @@ async function startServer() {
         open(ws) {
           const token = ws.data.token;
           if (token) {
-            wsService.handleConnection(ws, token);
+            wsService.handleConnection(ws as any, token);
           } else {
             ws.close();
           }
         },
         message(ws, message) {
-          wsService.handleMessage(ws, message as string);
+          wsService.handleMessage(ws as any, message as string);
         },
         close(ws) {
-          wsService.handleDisconnection(ws);
+          wsService.handleDisconnection(ws as any);
         },
       },
     });

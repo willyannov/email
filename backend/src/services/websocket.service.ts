@@ -1,6 +1,6 @@
 import { ServerWebSocket } from 'bun';
-import { MailboxService } from './mailbox.service';
-import { Email } from '../models/Email';
+import { MailboxService } from './mailbox.service.js';
+import { Email } from '../models/Email.js';
 
 interface WebSocketData {
   token: string;

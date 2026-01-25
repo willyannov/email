@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
@@ -15,7 +15,7 @@ export function getRedisClient(): Redis {
       console.log('✅ Conectado ao Redis com sucesso');
     });
 
-    redisClient.on('error', (error) => {
+    redisClient.on('error', (error: Error) => {
       console.error('❌ Erro na conexão com Redis:', error);
     });
   }

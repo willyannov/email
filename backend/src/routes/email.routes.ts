@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
-import { EmailService } from '../services/email.service';
-import { MailboxService } from '../services/mailbox.service';
-import { SearchService } from '../services/search.service';
-import { EmailIdSchema, PaginationSchema, SearchQuerySchema, MailboxTokenSchema } from '../utils/validation';
-import { readAttachment } from '../utils/attachmentStorage';
+import { EmailService } from '../services/email.service.js';
+import { MailboxService } from '../services/mailbox.service.js';
+import { SearchService } from '../services/search.service.js';
+import { EmailIdSchema, PaginationSchema, SearchQuerySchema, MailboxTokenSchema } from '../utils/validation.js';
+import { readAttachment } from '../utils/attachmentStorage.js';
 
 const emailService = new EmailService();
 const mailboxService = new MailboxService();

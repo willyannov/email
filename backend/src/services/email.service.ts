@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
-import { getDatabase } from '../config/database';
-import { Email, EmailListItem, EmailDetail } from '../models/Email';
-import { sanitizeHtml } from '../utils/emailParser';
+import { getDatabase } from '../config/database.js';
+import { Email, EmailListItem, EmailDetail } from '../models/Email.js';
+import { sanitizeHtml } from '../utils/emailParser.js';
 
 export class EmailService {
   private readonly collection = 'emails';
@@ -26,7 +26,7 @@ export class EmailService {
     const total = await db.collection<Email>(this.collection)
       .countDocuments({ mailboxId });
 
-    const emailList: EmailListItem[] = emails.map(email => ({
+    const emailList: EmailListItem[] = emails.map((email: Email) => ({
       _id: email._id!.toString(),
       from: email.from,
       subject: email.subject,

@@ -1,14 +1,14 @@
 import { SMTPServer, SMTPServerSession, SMTPServerAddress } from 'smtp-server';
 import { Readable } from 'stream';
 import { ObjectId } from 'mongodb';
-import { SMTP_CONFIG, EMAIL_DOMAINS } from '../config/smtp';
-import { MailboxService } from './mailbox.service';
-import { EmailService } from './email.service';
-import { WebSocketService } from './websocket.service';
-import { parseEmail } from '../utils/emailParser';
-import { saveAttachment } from '../utils/attachmentStorage';
-import { queueEmailForIndexing } from '../jobs/indexer.job';
-import { Email } from '../models/Email';
+import { SMTP_CONFIG, EMAIL_DOMAINS } from '../config/smtp.js';
+import { MailboxService } from './mailbox.service.js';
+import { EmailService } from './email.service.js';
+import { WebSocketService } from './websocket.service.js';
+import { parseEmail } from '../utils/emailParser.js';
+import { saveAttachment } from '../utils/attachmentStorage.js';
+import { queueEmailForIndexing } from '../jobs/indexer.job.js';
+import { Email } from '../models/Email.js';
 
 export class CustomSMTPServer {
   private server: SMTPServer;
@@ -146,7 +146,7 @@ export class CustomSMTPServer {
    * Configura handlers de erro
    */
   private setupErrorHandlers(): void {
-    this.server.on('error', (error) => {
+    this.server.on('error', (error: Error) => {
       console.error('❌ Erro no servidor SMTP:', error);
     });
   }

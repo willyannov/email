@@ -3,7 +3,7 @@ export const SMTP_CONFIG = {
   host: process.env.SMTP_HOST || '0.0.0.0',
   secure: false,
   authOptional: true,
-  disabledCommands: ['AUTH'],
+  disabledCommands: ['AUTH'] as string[],
   maxClients: 100,
   useXClient: false,
   useXForward: false,
@@ -15,7 +15,7 @@ export const SMTP_CONFIG = {
   // Timeouts
   socketTimeout: 60 * 1000, // 60 segundos
   closeTimeout: 30 * 1000,  // 30 segundos
-} as const;
+};
 
 export const EMAIL_DOMAINS = [
   'mediavid.site',

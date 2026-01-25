@@ -3,7 +3,7 @@ import {
   handleGetMailbox,
   handleExtendMailbox,
   handleDeleteMailbox,
-} from './routes/mailbox.routes';
+} from './routes/mailbox.routes.js';
 import {
   handleListEmails,
   handleGetEmail,
@@ -11,11 +11,11 @@ import {
   handleMarkAsRead,
   handleSearchEmails,
   handleDownloadAttachment,
-} from './routes/email.routes';
-import { handleCloudflareEmail } from './routes/webhook.routes';
-import { corsMiddleware, addCorsHeaders } from './middleware/cors';
-import { errorHandler } from './middleware/errorHandler';
-import { WebSocketService } from './services/websocket.service';
+} from './routes/email.routes.js';
+import { handleCloudflareEmail } from './routes/webhook.routes.js';
+import { corsMiddleware, addCorsHeaders } from './middleware/cors.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { WebSocketService } from './services/websocket.service.js';
 
 export function createRouter(wsService?: WebSocketService) {
   return async function handleRequest(req: Request): Promise<Response> {

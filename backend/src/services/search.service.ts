@@ -1,6 +1,6 @@
 import { MeiliSearch } from 'meilisearch';
-import { getMeilisearchClient } from '../config/meilisearch';
-import { Email } from '../models/Email';
+import { getMeilisearchClient } from '../config/meilisearch.js';
+import { Email } from '../models/Email.js';
 import { ObjectId } from 'mongodb';
 
 export class SearchService {

@@ -1,10 +1,10 @@
-import { MailboxService } from '../services/mailbox.service';
-import { EmailService } from '../services/email.service';
-import { WebSocketService } from '../services/websocket.service';
-import { Email } from '../models/Email';
+import { MailboxService } from '../services/mailbox.service.js';
+import { EmailService } from '../services/email.service.js';
+import { WebSocketService } from '../services/websocket.service.js';
+import { Email } from '../models/Email.js';
 import { simpleParser } from 'mailparser';
-import { saveAttachment } from '../utils/attachmentStorage';
-import { queueEmailForIndexing } from '../jobs/indexer.job';
+import { saveAttachment } from '../utils/attachmentStorage.js';
+import { queueEmailForIndexing } from '../jobs/indexer.job.js';
 
 const mailboxService = new MailboxService();
 const emailService = new EmailService();
@@ -14,7 +14,7 @@ export async function handleCloudflareEmail(
   wsService?: WebSocketService
 ): Promise<Response> {
   try {
-    const body = await req.json();
+    const body = await req.json() as any;
     const { to, from, subject, content, headers } = body;
 
     console.log('📧 Email recebido do Cloudflare:', { to, from, subject });
@@ -49,17 +49,19 @@ export async function handleCloudflareEmail(
         const parsed = await simpleParser(rawText);
 
         parsedFrom = parsed.from?.text || parsedFrom;
-        parsedTo = parsed.to?.value
-          ?.map(v => v.address?.toLowerCase())
+        const toValue = Array.isArray(parsed.to) ? parsed.to : (parsed.to ? [parsed.to] : []);
+        parsedTo = toValue
+          .flatMap((addr: any) => addr.value || [])
+          .map((v: any) => v.address?.toLowerCase())
           .filter((v): v is string => Boolean(v)) || parsedTo;
         parsedSubject = parsed.subject || parsedSubject;
         parsedTextBody = parsed.text || parsedTextBody;
         parsedHtmlBody = (typeof parsed.html === 'string' ? parsed.html : undefined) || parsedHtmlBody;
 
-        const parsedHeaderEntries: Array<[string, any]> = Array.from(parsed.headers?.entries?.() || []);
+        const parsedHeaderEntries = Array.from(parsed.headers?.entries?.() || []);
         if (parsedHeaderEntries.length > 0) {
           parsedHeaders = Object.fromEntries(
-            parsedHeaderEntries.map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : String(v)])
+            parsedHeaderEntries.map(([k, v]: [string, any]) => [k, Array.isArray(v) ? v.join(', ') : String(v)])
           );
         }
 

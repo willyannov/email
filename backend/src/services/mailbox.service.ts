@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import { getDatabase } from '../config/database';
-import { TempMailbox, CreateMailboxInput, MailboxResponse } from '../models/TempMailbox';
-import { generateRandomEmail, generateAccessToken, isValidPrefix } from '../utils/emailGenerator';
-import { EMAIL_DOMAINS } from '../config/smtp';
+import { getDatabase } from '../config/database.js';
+import { TempMailbox, CreateMailboxInput, MailboxResponse } from '../models/TempMailbox.js';
+import { generateRandomEmail, generateAccessToken, isValidPrefix } from '../utils/emailGenerator.js';
+import { EMAIL_DOMAINS } from '../config/smtp.js';
 
 const DEFAULT_TTL = parseInt(process.env.DEFAULT_MAILBOX_TTL || '3600000'); // 1 hora
 
