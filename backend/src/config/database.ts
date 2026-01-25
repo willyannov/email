@@ -55,8 +55,7 @@ export async function connectToDatabase(): Promise<Db> {
       socketTimeoutMS: 45000,
       maxPoolSize: 10,
       minPoolSize: 2,
-      ssl: true,
-      sslValidate: !allowInvalidTLS,
+      tls: true,
       tlsAllowInvalidCertificates: allowInvalidTLS,
       tlsAllowInvalidHostnames: allowInvalidTLS,
     });
@@ -110,8 +109,8 @@ export async function connectToDatabase(): Promise<Db> {
         client = new MongoClient(finalUri, {
           serverSelectionTimeoutMS: 30000,
           connectTimeoutMS: 30000,
-          ssl: true,
-          sslValidate: false,
+          tls: true,
+          tlsAllowInvalidCertificates: true,
         });
         
         await client.connect();
