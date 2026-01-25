@@ -37,7 +37,13 @@ class WebSocketClient {
       }
     }
 
-    const wsUrl = `ws://localhost:3000/ws/mailbox/${token}`;
+    // Construir URL do WebSocket a partir da URL da API
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+    const wsProtocol = apiUrl.startsWith('https') ? 'wss' : 'ws';
+    const wsHost = apiUrl.replace(/^https?:\/\//, '').replace('/api', '');
+    const wsUrl = `${wsProtocol}://${wsHost}/ws/mailbox/${token}`;
+    
+    console.log('🔌 Connecting WebSocket for token:', token);
     
     try {
       this.ws = new WebSocket(wsUrl);
