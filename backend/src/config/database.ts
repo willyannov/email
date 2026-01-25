@@ -1,4 +1,4 @@
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db, ServerApiVersion } from 'mongodb';
 
 function getMongoUri() {
   return process.env.MONGODB_URI || 'mongodb://localhost:27017/temp-email';
@@ -48,8 +48,13 @@ export async function connectToDatabase(): Promise<Db> {
       console.log('⚠️ TLS validation disabled via ALLOW_INVALID_TLS=true');
     }
     
-    // Configurações TLS explícitas para MongoDB Atlas
+    // Configurações para MongoDB Atlas com Stable API
     client = new MongoClient(finalUri, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      },
       serverSelectionTimeoutMS: 30000,
       connectTimeoutMS: 30000,
       socketTimeoutMS: 45000,
@@ -60,6 +65,7 @@ export async function connectToDatabase(): Promise<Db> {
       tlsAllowInvalidHostnames: allowInvalidTLS,
     });
     
+    console.log('🔌 Conectando ao MongoDB com Stable API v1...');
     await client.connect();
     
     // Ping para verificar conexão
@@ -107,6 +113,11 @@ export async function connectToDatabase(): Promise<Db> {
         console.log('📝 URI retry (mascarada):', finalUri.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@'));
         
         client = new MongoClient(finalUri, {
+          serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+          },
           serverSelectionTimeoutMS: 30000,
           connectTimeoutMS: 30000,
           tls: true,
