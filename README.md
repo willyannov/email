@@ -7,31 +7,6 @@
 
 Sistema completo de email temporário descartável, similar ao [tuamaeaquelaursa.com](https://tuamaeaquelaursa.com). Permite criar endereços de email temporários que expiram automaticamente, ideal para testes, cadastros temporários e proteção de privacidade.
 
-## 🚀 Deploy Online (100% GRATUITO)
-
-### Guias de Deploy Disponíveis:
-
-- 📖 **[ANALISE_HOSPEDAGEM.md](ANALISE_HOSPEDAGEM.md)** - Análise completa de todas as opções de hospedagem (Render, Vercel, Railway, Fly.io, Cloudflare)
-- ⚡ **[DEPLOY_QUICKSTART.md](DEPLOY_QUICKSTART.md)** - Guia rápido de deploy em 30-45 minutos
-- 📧 **[CONFIGURAR_EMAIL_CLOUDFLARE.md](CONFIGURAR_EMAIL_CLOUDFLARE.md)** - Setup detalhado do Cloudflare Email Routing
-
-### Deploy Recomendado (100% FREE):
-
-```
-Frontend  → Vercel (FREE ilimitado)
-Backend   → Render (FREE com Docker + keep-alive)
-Email     → Cloudflare Email Routing (FREE)
-MongoDB   → Atlas (FREE 512MB)
-Redis     → Upstash (FREE 10k comandos/dia)
-
-💰 CUSTO TOTAL: $0/mês
-⏱️ TEMPO: 30-45 minutos
-```
-
-**Veja o [guia completo de deploy](ANALISE_HOSPEDAGEM.md) para instruções passo a passo!**
-
----
-
 ## 🎯 Funcionalidades
 
 ### Core
