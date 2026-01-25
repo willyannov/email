@@ -13,7 +13,22 @@ export async function connectToDatabase(): Promise<Db> {
   }
 
   try {
-    client = new MongoClient(getMongoUri());
+    const uri = getMongoUri();
+    
+    // Adicionar database name se não estiver presente
+    const finalUri = uri.includes('mongodb.net/') && !uri.includes('mongodb.net/?') 
+      ? uri.replace('mongodb.net/', 'mongodb.net/tempmail')
+      : uri.includes('mongodb.net/?')
+      ? uri.replace('mongodb.net/?', 'mongodb.net/tempmail?')
+      : uri;
+    
+    client = new MongoClient(finalUri, {
+      tls: true,
+      tlsAllowInvalidCertificates: false,
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000,
+    });
+    
     await client.connect();
     db = client.db();
     
