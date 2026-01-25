@@ -1,3 +1,5 @@
+import http from 'http';
+import { WebSocketServer } from 'ws';
 import { connectToDatabase, closeDatabaseConnection } from './config/database.js';
 import { getRedisClient, closeRedisConnection } from './config/redis.js';
 import { setupMeilisearchIndexes } from './config/meilisearch.js';
@@ -18,65 +20,106 @@ async function startServer() {
   try {
     console.log('🚀 Iniciando servidor...');
     
-    // Inicializar servidor HTTP PRIMEIRO (para Render detectar porta)
+    // Criar servidor HTTP
     const router = createRouter(wsService);
     
-    type WebSocketData = { token: string };
-    
-    const httpServer = Bun.serve<WebSocketData>({
-      port: PORT,
-      fetch: async (req: Request, server) => {
-        const url = new URL(req.url);
+    const httpServer = http.createServer(async (req, res) => {
+      const url = new URL(req.url || '/', `http://${req.headers.host}`);
+      
+      // Health check sempre responde (mesmo sem MongoDB)
+      if (url.pathname === '/health') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ 
+          status: 'ok', 
+          uptime: process.uptime(),
+          mongodb: db ? 'connected' : 'connecting',
+        }));
+        return;
+      }
+      
+      // Converter requisição Node.js para Request do Fetch API
+      const headers = new Headers();
+      Object.entries(req.headers).forEach(([key, value]) => {
+        if (value) headers.set(key, Array.isArray(value) ? value[0] : value);
+      });
+      
+      const fetchRequest = new Request(`http://${req.headers.host}${req.url}`, {
+        method: req.method,
+        headers,
+        body: req.method !== 'GET' && req.method !== 'HEAD' ? 
+          await new Promise<Buffer>((resolve) => {
+            const chunks: Buffer[] = [];
+            req.on('data', chunk => chunks.push(chunk));
+            req.on('end', () => resolve(Buffer.concat(chunks)));
+          }) : undefined,
+      });
+      
+      try {
+        const response = await router(fetchRequest);
         
-        // Health check sempre responde (mesmo sem MongoDB)
-        if (url.pathname === '/health') {
-          return new Response(JSON.stringify({ 
-            status: 'ok', 
-            uptime: process.uptime(),
-            mongodb: db ? 'connected' : 'connecting',
-          }), {
-            headers: { 'Content-Type': 'application/json' },
-          });
-        }
+        // Converter Response para resposta Node.js
+        res.writeHead(response.status, Object.fromEntries(response.headers.entries()));
         
-        // WebSocket upgrade
-        if (url.pathname.startsWith('/ws/mailbox/')) {
-          const token = url.pathname.split('/').pop();
-          
-          const success = server.upgrade(req, {
-            data: { token: token || '' },
-          });
-          
-          if (success) {
-            return undefined as any;
+        if (response.body) {
+          const reader = response.body.getReader();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            res.write(value);
           }
-          
-          return new Response('WebSocket upgrade failed', { status: 400 });
         }
         
-        // Rotas HTTP normais
-        return router(req);
-      },
-      websocket: {
-        open(ws) {
-          const token = ws.data.token;
+        res.end();
+      } catch (error) {
+        console.error('Erro ao processar requisição:', error);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Internal Server Error' }));
+      }
+    });
+    
+    // Configurar WebSocket
+    const wss = new WebSocketServer({ noServer: true });
+    
+    httpServer.on('upgrade', (request, socket, head) => {
+      const url = new URL(request.url || '/', `http://${request.headers.host}`);
+      
+      if (url.pathname.startsWith('/ws/mailbox/')) {
+        wss.handleUpgrade(request, socket, head, (ws) => {
+          const token = url.pathname.split('/').pop() || '';
+          
+          // Adicionar token ao WebSocket
+          (ws as any).token = token;
+          
+          ws.on('open', () => {
+            wsService.handleConnection(ws as any, token);
+          });
+          
+          ws.on('message', (message) => {
+            wsService.handleMessage(ws as any, message.toString());
+          });
+          
+          ws.on('close', () => {
+            wsService.handleDisconnection(ws as any);
+          });
+          
+          // Conectar imediatamente após upgrade
           if (token) {
             wsService.handleConnection(ws as any, token);
           } else {
             ws.close();
           }
-        },
-        message(ws, message) {
-          wsService.handleMessage(ws as any, message as string);
-        },
-        close(ws) {
-          wsService.handleDisconnection(ws as any);
-        },
-      },
+        });
+      } else {
+        socket.destroy();
+      }
     });
     
-    console.log(`✅ Servidor HTTP rodando na porta ${PORT}`);
-    console.log(`🌐 Health check: http://localhost:${PORT}/health`);
+    // Iniciar servidor HTTP
+    httpServer.listen(PORT, '0.0.0.0', () => {
+      console.log(`✅ Servidor HTTP rodando na porta ${PORT}`);
+      console.log(`🌐 Health check: http://localhost:${PORT}/health`);
+      console.log(`🔌 WebSocket disponível em ws://localhost:${PORT}/ws/mailbox/:token`);
+    });
     
     // Conectar ao banco de dados em background
     connectToDatabase()
