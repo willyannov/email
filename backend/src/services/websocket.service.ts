@@ -129,7 +129,7 @@ export class WebSocketService {
    */
   broadcastToMailbox(mailboxId: string, message: any) {
     for (const [token, ws] of this.connections) {
-      if (ws.data.mailboxId === mailboxId && ws.readyState === 1) {
+      if (ws.mailboxId === mailboxId && ws.readyState === 1) {
         ws.send(JSON.stringify(message));
       }
     }
