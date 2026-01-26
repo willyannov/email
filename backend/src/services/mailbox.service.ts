@@ -4,7 +4,8 @@ import { TempMailbox, CreateMailboxInput, MailboxResponse } from '../models/Temp
 import { generateRandomEmail, generateAccessToken, isValidPrefix } from '../utils/emailGenerator.js';
 import { EMAIL_DOMAINS } from '../config/smtp.js';
 
-const DEFAULT_TTL = parseInt(process.env.DEFAULT_MAILBOX_TTL || '3600000'); // 1 hora
+const DEFAULT_TTL = parseInt(process.env.DEFAULT_MAILBOX_TTL || '3600000'); // 1 hora (3600000ms)
+const MAX_TTL = 3600000; // Limite máximo de 1 hora
 
 export class MailboxService {
   private readonly collection = 'mailboxes';
@@ -43,9 +44,15 @@ export class MailboxService {
     // Gerar token de acesso
     const token = generateAccessToken();
 
-    // Calcular expiração
+    // Calcular expiração (máximo 1 hora)
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + (ttl || DEFAULT_TTL));
+    const requestedTtl = ttl || DEFAULT_TTL;
+    const finalTtl = Math.min(requestedTtl, MAX_TTL); // Nunca exceder 1 hora
+    const expiresAt = new Date(now.getTime() + finalTtl);
+    
+    if (requestedTtl > MAX_TTL) {
+      console.warn(`⚠️ TTL solicitado (${requestedTtl}ms) excede máximo de 1 hora. Usando ${MAX_TTL}ms`);
+    }
 
     // Criar documento
     const mailbox: TempMailbox = {

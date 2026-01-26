@@ -47,8 +47,8 @@ indexerWorker.on('failed', (job, err) => {
 // Função auxiliar para adicionar email à fila de indexação
 export async function queueEmailForIndexing(email: Email) {
   await indexerQueue.add('index-email', { email }, {
-    removeOnComplete: 100,
-    removeOnFail: 50,
+    removeOnComplete: 10, // Reduzido de 100 para 10 (economizar memória Upstash)
+    removeOnFail: 20, // Reduzido de 50 para 20
     attempts: 3,
     backoff: {
       type: 'exponential',

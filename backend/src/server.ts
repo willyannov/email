@@ -8,6 +8,7 @@ import { WebSocketService } from './services/websocket.service.js';
 import { createRouter } from './router.js';
 import { scheduleCleanupJob, cleanupWorker } from './jobs/cleanup.job.js';
 import { indexerWorker } from './jobs/indexer.job.js';
+import { scheduleOrphanCleanupJob, orphanCleanupWorker } from './jobs/orphan-cleanup.job.js';
 
 const PORT = parseInt(process.env.PORT || '3000');
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '2525');
@@ -19,6 +20,8 @@ const wsService = new WebSocketService();
 async function startServer() {
   try {
     console.log('🚀 Iniciando servidor...');
+    console.log(`📍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`⏱️ TTL Máximo: 1 hora (3600000ms)`);
     
     // Criar servidor HTTP
     const router = createRouter(wsService);
@@ -135,9 +138,13 @@ async function startServer() {
           console.error('⚠️ Erro ao configurar Meilisearch:', err)
         );
         
-        // Inicializar Bull workers
+        // Inicializar Bull workers e agendar jobs
         scheduleCleanupJob().catch(err => 
-          console.error('⚠️ Erro ao inicializar workers:', err)
+          console.error('⚠️ Erro ao inicializar job de cleanup:', err)
+        );
+        
+        scheduleOrphanCleanupJob().catch(err => 
+          console.error('⚠️ Erro ao inicializar job de limpeza de órfãos:', err)
         );
         
         // Inicializar servidor SMTP (opcional - pode falhar se porta bloqueada)
@@ -169,6 +176,7 @@ process.on('SIGINT', async () => {
   if (smtpServer) await smtpServer.close();
   await cleanupWorker.close();
   await indexerWorker.close();
+  await orphanCleanupWorker.close();
   await closeDatabaseConnection();
   await closeRedisConnection();
   process.exit(0);
@@ -179,6 +187,7 @@ process.on('SIGTERM', async () => {
   if (smtpServer) await smtpServer.close();
   await cleanupWorker.close();
   await indexerWorker.close();
+  await orphanCleanupWorker.close();
   await closeDatabaseConnection();
   await closeRedisConnection();
   process.exit(0);
