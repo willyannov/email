@@ -23,11 +23,9 @@ export const indexerWorker = new Worker<IndexEmailJob>(
 
     try {
       await searchService.indexEmail(email);
-      console.log(`🔍 Email indexado: ${email._id}`);
 
       return { emailId: email._id, timestamp: new Date() };
     } catch (error) {
-      console.error('❌ Erro ao indexar email:', error);
       throw error;
     }
   },
@@ -39,11 +37,11 @@ export const indexerWorker = new Worker<IndexEmailJob>(
 
 // Event listeners
 indexerWorker.on('completed', (job) => {
-  console.log(`✅ Job de indexação ${job.id} concluído`);
+  // Job completed
 });
 
 indexerWorker.on('failed', (job, err) => {
-  console.error(`❌ Job de indexação ${job?.id} falhou:`, err);
+  // Job failed
 });
 
 // Função auxiliar para adicionar email à fila de indexação

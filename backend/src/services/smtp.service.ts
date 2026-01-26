@@ -62,7 +62,6 @@ export class CustomSMTPServer {
 
       callback();
     } catch (error: any) {
-      console.error('Erro ao validar destinatário:', error);
       callback(new Error('Erro ao processar destinatário'));
     }
   }
@@ -84,7 +83,6 @@ export class CustomSMTPServer {
         const mailbox = await this.mailboxService.getMailboxByAddress(recipient);
         
         if (!mailbox) {
-          console.warn(`Mailbox não encontrada para ${recipient}`);
           continue;
         }
 
@@ -121,8 +119,6 @@ export class CustomSMTPServer {
         // Salvar email no banco
         const emailId = await this.emailService.saveEmail(email);
 
-        console.log(`✉️  Email recebido: ${parsed.from} -> ${recipient} (ID: ${emailId})`);
-
         // Atualizar objeto com ID
         const savedEmail = { ...email, _id: emailId };
 
@@ -137,7 +133,6 @@ export class CustomSMTPServer {
 
       callback();
     } catch (error: any) {
-      console.error('Erro ao processar email:', error);
       callback(new Error('Erro ao processar email'));
     }
   }
@@ -147,7 +142,7 @@ export class CustomSMTPServer {
    */
   private setupErrorHandlers(): void {
     this.server.on('error', (error: Error) => {
-      console.error('❌ Erro no servidor SMTP:', error);
+      // SMTP server error
     });
   }
 
@@ -166,7 +161,6 @@ export class CustomSMTPServer {
   public close(): Promise<void> {
     return new Promise((resolve) => {
       this.server.close(() => {
-        console.log('🛑 Servidor SMTP encerrado');
         resolve();
       });
     });

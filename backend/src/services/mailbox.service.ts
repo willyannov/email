@@ -42,12 +42,6 @@ export class MailboxService {
 
     // Gerar token de acesso
     const token = generateAccessToken();
-    
-    console.log('🔑 Token gerado:', {
-      length: token.length,
-      token: token,
-      email: emailAddress
-    });
 
     // Calcular expiração
     const now = new Date();
@@ -63,11 +57,6 @@ export class MailboxService {
     };
 
     const result = await db.collection<TempMailbox>(this.collection).insertOne(mailbox);
-    
-    console.log('💾 Mailbox salva no banco:', {
-      _id: result.insertedId,
-      address: emailAddress,
-      token,
     });
 
     return {

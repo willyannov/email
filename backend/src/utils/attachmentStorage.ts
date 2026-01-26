@@ -49,7 +49,7 @@ export async function deleteAttachment(filePath: string): Promise<void> {
   try {
     await fs.unlink(filePath);
   } catch (error) {
-    console.error('Erro ao deletar anexo:', error);
+    // Error deleting attachment
   }
 }
 

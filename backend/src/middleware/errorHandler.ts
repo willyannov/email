@@ -1,6 +1,4 @@
 export function errorHandler(error: any): Response {
-  console.error('❌ Erro:', error);
-
   // Zod validation errors
   if (error.name === 'ZodError') {
     return Response.json(

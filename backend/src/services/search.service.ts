@@ -11,7 +11,6 @@ export class SearchService {
     try {
       this.client = getMeilisearchClient();
     } catch (error) {
-      console.warn('⚠️ Meilisearch não disponível - busca avançada desabilitada');
       this.client = null;
     }
   }
@@ -21,7 +20,6 @@ export class SearchService {
    */
   async indexEmail(email: Email): Promise<void> {
     if (!this.client) {
-      console.debug('Meilisearch não disponível - pulando indexação');
       return;
     }
     
@@ -37,7 +35,6 @@ export class SearchService {
         receivedAt: email.receivedAt.getTime(), // Timestamp para ordenação
       }]);
     } catch (error) {
-      console.error('Erro ao indexar email no Meilisearch:', error);
       // Não propaga o erro - indexação é opcional
     }
   }
@@ -60,7 +57,6 @@ export class SearchService {
     total: number;
   }> {
     if (!this.client) {
-      console.warn('Meilisearch não disponível - retornando resultado vazio');
       return { hits: [], total: 0 };
     }
     
@@ -79,7 +75,6 @@ export class SearchService {
         total: results.estimatedTotalHits || 0,
       };
     } catch (error) {
-      console.error('Erro ao buscar emails no Meilisearch:', error);
       return { hits: [], total: 0 };
     }
   }
@@ -94,7 +89,6 @@ export class SearchService {
       const index = this.client.index(this.indexName);
       await index.deleteDocument(emailId);
     } catch (error) {
-      console.error('Erro ao deletar email do Meilisearch:', error);
       // Não lançar erro, pois o email já foi deletado do MongoDB
     }
   }
@@ -111,7 +105,7 @@ export class SearchService {
         filter: `mailboxId = ${mailboxId}`,
       });
     } catch (error) {
-      console.error('Erro ao deletar emails da mailbox do Meilisearch:', error);
+      // Error deleting mailbox emails
     }
   }
 }

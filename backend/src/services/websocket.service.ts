@@ -20,15 +20,10 @@ export class WebSocketService {
    */
   async handleConnection(ws: ExtendedWebSocket, token: string) {
     try {
-      console.log(`🔌 Tentando conectar WebSocket com token: ${token}`);
-      console.log(`📏 Tamanho do token recebido: ${token.length}`);
-      
       // Validar token
       const mailbox = await this.mailboxService.getMailboxByToken(token);
       
       if (!mailbox) {
-        console.log(`❌ Mailbox não encontrada para token: ${token}`);
-        console.log(`🔍 Tentando buscar no banco...`);
         ws.send(JSON.stringify({ 
           type: 'error', 
           message: 'Mailbox não encontrada' 
@@ -37,13 +32,9 @@ export class WebSocketService {
         return;
       }
 
-      console.log(`✅ Mailbox encontrada: ${mailbox.address}`);
-      console.log(`🔑 Token da mailbox: ${mailbox.token}`);
-
       // Verificar se não expirou
       const isValid = await this.mailboxService.isMailboxValid(token);
       if (!isValid) {
-        console.log(`❌ Mailbox expirada: ${token}`);
         ws.send(JSON.stringify({ 
           type: 'error', 
           message: 'Mailbox expirada' 
@@ -64,9 +55,7 @@ export class WebSocketService {
         address: mailbox.address,
       }));
 
-      console.log(`🔌 Cliente conectado via WebSocket: ${mailbox.address}`);
     } catch (error) {
-      console.error('❌ Erro ao processar conexão WebSocket:', error);
       ws.close();
     }
   }
@@ -78,7 +67,6 @@ export class WebSocketService {
     const token = ws.token;
     if (token) {
       this.connections.delete(token);
-      console.log(`🔌 Cliente desconectado via WebSocket: ${token}`);
     }
   }
 
@@ -96,9 +84,8 @@ export class WebSocketService {
       }
 
       // Outras mensagens podem ser adicionadas aqui
-      console.log('Mensagem WebSocket recebida:', data);
     } catch (error) {
-      console.error('Erro ao processar mensagem WebSocket:', error);
+      // Error processing WebSocket message
     }
   }
 

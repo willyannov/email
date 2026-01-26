@@ -7,23 +7,14 @@ export async function handleCreateMailbox(req: Request): Promise<Response> {
   try {
     const body = await req.json().catch(() => ({}));
     
-    console.log('📥 Requisição para criar mailbox:', body);
-    
     // Validar input
     const validatedInput = CreateMailboxSchema.parse(body);
     
     // Criar mailbox
     const mailbox = await mailboxService.createMailbox(validatedInput);
     
-    console.log('✅ Mailbox criada com sucesso:', {
-      address: mailbox.address,
-      token: mailbox.token,
-      expiresAt: mailbox.expiresAt
-    });
-    
     return Response.json(mailbox, { status: 201 });
   } catch (error: any) {
-    console.error('❌ Erro ao criar mailbox:', error);
     if (error.name === 'ZodError') {
       return Response.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 });
     }

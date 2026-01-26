@@ -17,8 +17,6 @@ export async function handleCloudflareEmail(
     const body = await req.json() as any;
     const { to, from, subject, content, headers } = body;
 
-    console.log('📧 Email recebido do Cloudflare:', { to, from, subject });
-
     // Extrair endereço de email
     const recipientEmail = Array.isArray(to) ? to[0] : to;
 
@@ -26,7 +24,6 @@ export async function handleCloudflareEmail(
     const mailbox = await mailboxService.getMailboxByEmail(recipientEmail);
 
     if (!mailbox) {
-      console.log('❌ Mailbox não encontrado:', recipientEmail);
       return Response.json(
         { error: 'Mailbox não encontrado' },
         { status: 404 }
@@ -77,7 +74,7 @@ export async function handleCloudflareEmail(
           }
         }
       } catch (e) {
-        console.warn('⚠️ Falha ao parsear raw email do Cloudflare, usando fallback.');
+        // Fallback to basic parsing
       }
     }
 
@@ -98,8 +95,6 @@ export async function handleCloudflareEmail(
     // Salvar email
     const emailId = await emailService.saveEmail(emailData);
 
-    console.log('✅ Email processado:', emailId.toString());
-
     // Atualizar objeto com ID
     const savedEmail = { ...emailData, _id: emailId };
 
@@ -107,10 +102,7 @@ export async function handleCloudflareEmail(
 
     // Notificar via WebSocket se o serviço estiver disponível
     if (wsService && mailbox.token) {
-      console.log('📡 Tentando notificar via WebSocket (webhook)...');
       wsService.notifyNewEmail(mailbox.token, savedEmail as Email);
-    } else {
-      console.warn('⚠️ WebSocketService não fornecido ou mailbox sem token. Notificação pulada.');
     }
 
     return Response.json({ 
@@ -118,7 +110,6 @@ export async function handleCloudflareEmail(
       emailId: emailId.toString() 
     });
   } catch (error) {
-    console.error('❌ Erro ao processar email:', error);
     return Response.json(
       { 
         error: 'Erro ao processar email',

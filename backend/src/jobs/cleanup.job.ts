@@ -17,8 +17,6 @@ export const cleanupQueue = new Queue(QUEUE_NAME, {
 export const cleanupWorker = new Worker(
   QUEUE_NAME,
   async (job) => {
-    console.log('🧹 Iniciando limpeza de dados expirados...');
-
     const db = getDatabase();
     let cleanedMailboxes = 0;
     let cleanedEmails = 0;
@@ -54,15 +52,12 @@ export const cleanupWorker = new Worker(
         cleanedMailboxes++;
       }
 
-      console.log(`✅ Limpeza concluída: ${cleanedMailboxes} mailboxes, ${cleanedEmails} emails`);
-
       return {
         cleanedMailboxes,
         cleanedEmails,
         timestamp: new Date(),
       };
     } catch (error) {
-      console.error('❌ Erro durante limpeza:', error);
       throw error;
     }
   },
@@ -74,11 +69,11 @@ export const cleanupWorker = new Worker(
 
 // Event listeners
 cleanupWorker.on('completed', (job) => {
-  console.log(`✅ Job de limpeza ${job.id} concluído`);
+  // Job completed
 });
 
 cleanupWorker.on('failed', (job, err) => {
-  console.error(`❌ Job de limpeza ${job?.id} falhou:`, err);
+  // Job failed
 });
 
 // Agendar job recorrente (a cada 10 minutos)
@@ -94,6 +89,4 @@ export async function scheduleCleanupJob() {
       removeOnFail: 20, // Manter últimos 20 jobs falhos
     }
   );
-
-  console.log('🔄 Job de limpeza agendado (a cada 10 minutos)');
 }

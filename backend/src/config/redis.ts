@@ -6,9 +6,6 @@ let redisClient: Redis | null = null;
 
 export function getRedisClient(): Redis {
   if (!redisClient) {
-    console.log('🔄 Conectando ao Redis...');
-    console.log('📍 URL:', REDIS_URL.replace(/:[^:@]+@/, ':****@')); // Ocultar senha nos logs
-    
     redisClient = new Redis(REDIS_URL, {
       maxRetriesPerRequest: null,
       enableReadyCheck: false,
@@ -20,7 +17,6 @@ export function getRedisClient(): Redis {
       connectTimeout: 10000,
       retryStrategy(times) {
         const delay = Math.min(times * 50, 2000);
-        console.log(`🔄 Tentando reconectar ao Redis (tentativa ${times})...`);
         return delay;
       },
     });
@@ -30,20 +26,15 @@ export function getRedisClient(): Redis {
     });
 
     redisClient.on('ready', () => {
-      console.log('✅ Redis pronto para uso');
+      // Redis ready
     });
 
     redisClient.on('error', (error: Error) => {
-      console.error('❌ Erro na conexão com Redis:', error.message);
-      // Mostrar mais detalhes do erro
-      if (error.message.includes('ENOTFOUND')) {
-        console.error('💡 Verifique se REDIS_URL está correta no Render');
-        console.error('💡 Formato: rediss://default:SENHA@host.upstash.io:6379');
-      }
+      // Error connecting to Redis
     });
 
     redisClient.on('close', () => {
-      console.log('🔌 Conexão com Redis fechada');
+      // Connection closed
     });
   }
 
@@ -54,6 +45,5 @@ export async function closeRedisConnection() {
   if (redisClient) {
     await redisClient.quit();
     redisClient = null;
-    console.log('🔌 Conexão com Redis fechada');
   }
 }

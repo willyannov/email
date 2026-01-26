@@ -12,6 +12,7 @@
     "start:bun": "bun dist/server.js"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.2.0",
     "bullmq": "^5.23.3",
     "ioredis": "^5.4.1",
     "mailparser": "^3.7.1",

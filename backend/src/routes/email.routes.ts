@@ -11,7 +11,6 @@ const searchService = new SearchService();
 
 export async function handleListEmails(req: Request, token: string): Promise<Response> {
   try {
-    console.log(`📋 Listando emails para token: ${token.substring(0, 8)}...`);
     const url = new URL(req.url);
     const limit = parseInt(url.searchParams.get('limit') || '20');
     const offset = parseInt(url.searchParams.get('offset') || '0');
@@ -22,17 +21,14 @@ export async function handleListEmails(req: Request, token: string): Promise<Res
     // Verificar mailbox
     const mailbox = await mailboxService.getMailboxByToken(token);
     if (!mailbox) {
-      console.error(`❌ Mailbox não encontrada para token: ${token.substring(0, 8)}...`);
       return Response.json({ error: 'Mailbox não encontrada' }, { status: 404 });
     }
 
     // Listar emails
     const result = await emailService.listEmails(mailbox._id!, limit, offset);
-    console.log(`✅ Retornando ${result.emails.length} emails`);
 
     return Response.json(result);
   } catch (error: any) {
-    console.error('❌ Erro ao listar emails:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 }

@@ -87,16 +87,6 @@ export async function parseEmail(emailStream: Readable): Promise<ParsedEmail> {
     textBody = textBody.replace(/^Content-Transfer-Encoding:.*$/gm, '').trim();
   }
 
-  console.log('📧 Email parseado:', {
-    from: fromAddress,
-    to: toAddresses,
-    subject: parsed.subject,
-    hasText: !!textBody,
-    hasHtml: !!htmlBody,
-    textLength: textBody?.length,
-    htmlLength: typeof htmlBody === 'string' ? htmlBody.length : 0,
-  });
-
   return {
     from: fromAddress,
     to: toAddresses,
