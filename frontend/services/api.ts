@@ -6,7 +6,7 @@ export interface CreateMailboxInput {
 
 export interface MailboxResponse {
   address: string;
-  accessToken: string;
+  token: string;
   expiresAt: string;
   createdAt: string;
   _id?: string;

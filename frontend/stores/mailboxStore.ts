@@ -25,7 +25,7 @@ export interface EmailDetail extends Email {
 
 export interface Mailbox {
   address: string;
-  accessToken: string;
+  token: string;
   expiresAt: string;
   createdAt: string;
   _id?: string;

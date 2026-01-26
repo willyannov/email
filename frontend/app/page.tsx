@@ -16,7 +16,7 @@ export default function Home() {
       const mailbox = await apiClient.createMailbox({
         customPrefix: customPrefix || undefined,
       });
-      router.push(`/${mailbox.accessToken}`);
+      router.push(`/${mailbox.token}`);
     } catch (error) {
       console.error("Failed to create mailbox", error);
       alert("Failed to create mailbox. Please try again.");
