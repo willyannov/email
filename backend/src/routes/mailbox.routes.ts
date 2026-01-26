@@ -61,6 +61,7 @@ export async function handleGetMailbox(req: Request, tokenOrPrefix: string): Pro
     
     return Response.json({
       address: mailbox.address,
+      token: mailbox.token,
       expiresAt: mailbox.expiresAt,
       createdAt: mailbox.createdAt,
     });

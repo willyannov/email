@@ -36,7 +36,7 @@ export default function MailboxView({ token }: { token: string }) {
         if (cancelled) return;
         setMailbox(mb);
 
-        activeToken = mb.accessToken || token;
+        activeToken = mb.token || token;
         setApiToken(activeToken);
 
         await refreshEmails();
