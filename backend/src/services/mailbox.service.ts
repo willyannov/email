@@ -57,7 +57,6 @@ export class MailboxService {
     };
 
     const result = await db.collection<TempMailbox>(this.collection).insertOne(mailbox);
-    });
 
     return {
       address: emailAddress,
@@ -84,6 +83,7 @@ export class MailboxService {
     return await db.collection<TempMailbox>(this.collection)
       .findOne({ address: address.toLowerCase(), isActive: true });
   }
+
   /**
    * Busca ou cria mailbox por prefixo
    */
@@ -129,6 +129,7 @@ export class MailboxService {
 
     // Criar nova mailbox
     return await this.createMailbox({ customPrefix: normalizedPrefix });
+
   }
   /**
    * Verifica se uma mailbox está ativa e não expirou
