@@ -106,9 +106,9 @@ export async function handleCloudflareEmail(
     await queueEmailForIndexing(savedEmail as Email);
 
     // Notificar via WebSocket se o serviço estiver disponível
-    if (wsService && mailbox.accessToken) {
+    if (wsService && mailbox.token) {
       console.log('📡 Tentando notificar via WebSocket (webhook)...');
-      wsService.notifyNewEmail(mailbox.accessToken, savedEmail as Email);
+      wsService.notifyNewEmail(mailbox.token, savedEmail as Email);
     } else {
       console.warn('⚠️ WebSocketService não fornecido ou mailbox sem token. Notificação pulada.');
     }

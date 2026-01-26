@@ -146,7 +146,7 @@ async function createIndexes(db: Db) {
   try {
     // Índices para TempMailbox
     await db.collection('mailboxes').createIndex({ address: 1 }, { unique: true });
-    await db.collection('mailboxes').createIndex({ accessToken: 1 }, { unique: true });
+    await db.collection('mailboxes').createIndex({ token: 1 }, { unique: true });
     await db.collection('mailboxes').createIndex({ expiresAt: 1 });
     await db.collection('mailboxes').createIndex({ isActive: 1 });
     

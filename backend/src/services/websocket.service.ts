@@ -38,7 +38,7 @@ export class WebSocketService {
       }
 
       console.log(`✅ Mailbox encontrada: ${mailbox.address}`);
-      console.log(`🔑 Access token da mailbox: ${mailbox.accessToken}`);
+      console.log(`🔑 Token da mailbox: ${mailbox.token}`);
 
       // Verificar se não expirou
       const isValid = await this.mailboxService.isMailboxValid(token);

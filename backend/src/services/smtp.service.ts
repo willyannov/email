@@ -127,8 +127,8 @@ export class CustomSMTPServer {
         const savedEmail = { ...email, _id: emailId };
 
         // Notificar via WebSocket
-        if (this.wsService && mailbox.accessToken) {
-          this.wsService.notifyNewEmail(mailbox.accessToken, savedEmail);
+        if (this.wsService && mailbox.token) {
+          this.wsService.notifyNewEmail(mailbox.token, savedEmail);
         }
 
         // Disparar job de indexação no Meilisearch
