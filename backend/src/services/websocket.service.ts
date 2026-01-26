@@ -1,14 +1,14 @@
-import { ServerWebSocket } from 'bun';
+import { WebSocket } from 'ws';
 import { MailboxService } from './mailbox.service.js';
 import { Email } from '../models/Email.js';
 
-interface WebSocketData {
-  token: string;
+interface ExtendedWebSocket extends WebSocket {
+  token?: string;
   mailboxId?: string;
 }
 
 export class WebSocketService {
-  private connections = new Map<string, ServerWebSocket<WebSocketData>>();
+  private connections = new Map<string, ExtendedWebSocket>();
   private mailboxService: MailboxService;
 
   constructor() {
@@ -18,7 +18,7 @@ export class WebSocketService {
   /**
    * Registra uma nova conexão WebSocket
    */
-  async handleConnection(ws: ServerWebSocket<WebSocketData>, token: string) {
+  async handleConnection(ws: ExtendedWebSocket, token: string) {
     try {
       console.log(`🔌 Tentando conectar WebSocket com token: ${token}`);
       console.log(`📏 Tamanho do token recebido: ${token.length}`);
@@ -53,8 +53,8 @@ export class WebSocketService {
       }
 
       // Armazenar conexão
-      ws.data.token = token;
-      ws.data.mailboxId = mailbox._id!.toString();
+      ws.token = token;
+      ws.mailboxId = mailbox._id!.toString();
       this.connections.set(token, ws);
 
       // Enviar confirmação
@@ -74,8 +74,8 @@ export class WebSocketService {
   /**
    * Remove uma conexão
    */
-  handleDisconnection(ws: ServerWebSocket<WebSocketData>) {
-    const token = ws.data.token;
+  handleDisconnection(ws: ExtendedWebSocket) {
+    const token = ws.token;
     if (token) {
       this.connections.delete(token);
       console.log(`🔌 Cliente desconectado via WebSocket: ${token}`);
@@ -85,7 +85,7 @@ export class WebSocketService {
   /**
    * Processa mensagem recebida
    */
-  handleMessage(ws: ServerWebSocket<WebSocketData>, message: string) {
+  handleMessage(ws: ExtendedWebSocket, message: string) {
     try {
       const data = JSON.parse(message);
       
