@@ -2,10 +2,16 @@ import { MeiliSearch } from 'meilisearch';
 
 const MEILISEARCH_HOST = process.env.MEILISEARCH_HOST || 'http://localhost:7700';
 const MEILISEARCH_API_KEY = process.env.MEILISEARCH_API_KEY;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 let meilisearchClient: MeiliSearch | null = null;
 
 export function getMeilisearchClient(): MeiliSearch {
+  // Em produção, não inicializar se for localhost (não configurado)
+  if (IS_PRODUCTION && MEILISEARCH_HOST.includes('localhost')) {
+    throw new Error('Meilisearch não configurado em produção');
+  }
+
   if (!meilisearchClient) {
     meilisearchClient = new MeiliSearch({
       host: MEILISEARCH_HOST,
@@ -19,6 +25,12 @@ export function getMeilisearchClient(): MeiliSearch {
 }
 
 export async function setupMeilisearchIndexes() {
+  // Em produção, não tentar configurar se for localhost (não configurado)
+  if (IS_PRODUCTION && MEILISEARCH_HOST.includes('localhost')) {
+    console.log('ℹ️ Meilisearch não configurado - busca avançada desabilitada (opcional)');
+    return;
+  }
+
   try {
     const client = getMeilisearchClient();
     
