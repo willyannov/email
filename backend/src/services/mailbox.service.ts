@@ -41,11 +41,11 @@ export class MailboxService {
     }
 
     // Gerar token de acesso
-    const accessToken = generateAccessToken();
+    const token = generateAccessToken();
     
     console.log('🔑 Token gerado:', {
-      length: accessToken.length,
-      token: accessToken,
+      length: token.length,
+      token: token,
       email: emailAddress
     });
 
@@ -56,7 +56,7 @@ export class MailboxService {
     // Criar documento
     const mailbox: TempMailbox = {
       address: emailAddress,
-      accessToken,
+      token,
       createdAt: now,
       expiresAt,
       isActive: true,
@@ -67,12 +67,12 @@ export class MailboxService {
     console.log('💾 Mailbox salva no banco:', {
       _id: result.insertedId,
       address: emailAddress,
-      accessToken,
+      token,
     });
 
     return {
       address: emailAddress,
-      accessToken,
+      token,
       expiresAt,
       createdAt: now,
     };
@@ -84,7 +84,7 @@ export class MailboxService {
   async getMailboxByToken(token: string): Promise<TempMailbox | null> {
     const db = getDatabase();
     return await db.collection<TempMailbox>(this.collection)
-      .findOne({ accessToken: token, isActive: true });
+      .findOne({ token: token, isActive: true });
   }
 
   /**
@@ -124,7 +124,7 @@ export class MailboxService {
         
         return {
           address,
-          accessToken: existing.accessToken,
+          token: existing.token,
           expiresAt: newExpiresAt,
           createdAt: existing.createdAt,
         };
@@ -132,7 +132,7 @@ export class MailboxService {
       
       return {
         address: existing.address,
-        accessToken: existing.accessToken,
+        token: existing.token,
         expiresAt: existing.expiresAt,
         createdAt: existing.createdAt,
       };

@@ -17,7 +17,7 @@ export async function handleCreateMailbox(req: Request): Promise<Response> {
     
     console.log('✅ Mailbox criada com sucesso:', {
       address: mailbox.address,
-      accessToken: mailbox.accessToken,
+      token: mailbox.token,
       expiresAt: mailbox.expiresAt
     });
     
@@ -44,7 +44,7 @@ export async function handleGetMailbox(req: Request, tokenOrPrefix: string): Pro
       const mailboxData = await mailboxService.getOrCreateMailboxByPrefix(tokenOrPrefix);
       return Response.json({
         address: mailboxData.address,
-        accessToken: mailboxData.accessToken,
+        token: mailboxData.token,
         expiresAt: mailboxData.expiresAt,
         createdAt: mailboxData.createdAt,
       });

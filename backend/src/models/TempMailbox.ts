@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 export interface TempMailbox {
   _id?: ObjectId;
   address: string;              // email completo (usuario@dominio.com)
-  accessToken: string;          // token único para acesso
+  token: string;                // token único para acesso
   createdAt: Date;
   expiresAt: Date;
   isActive: boolean;
@@ -17,7 +17,7 @@ export interface CreateMailboxInput {
 
 export interface MailboxResponse {
   address: string;
-  accessToken: string;
+  token: string;
   expiresAt: Date;
   createdAt: Date;
 }

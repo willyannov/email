@@ -39,11 +39,11 @@ describe('Mailbox Integration Tests', () => {
       expect(response.status).toBe(201);
       const data = await response.json();
 
-      expect(data).toHaveProperty('accessToken');
+      expect(data).toHaveProperty('token');
       expect(data).toHaveProperty('address');
       expect(data).toHaveProperty('expiresAt');
       expect(data.address).toMatch(/@mediavid\.site$/);
-      expect(data.accessToken).toHaveLength(64);
+      expect(data.token).toHaveLength(64);
     });
 
     test('should create mailbox with custom prefix', async () => {
@@ -58,7 +58,7 @@ describe('Mailbox Integration Tests', () => {
       const data = await response.json();
 
       expect(data.address).toBe(`${customPrefix}@mediavid.site`);
-      expect(data.accessToken).toHaveLength(64);
+      expect(data.token).toHaveLength(64);
     });
 
     test('should reject invalid custom prefix', async () => {
@@ -97,9 +97,9 @@ describe('Mailbox Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
       });
-      const { accessToken } = await createResponse.json();
+      const { token } = await createResponse.json();
 
-      const response = await fetch(`${API_URL}/mailbox/${accessToken}`);
+      const response = await fetch(`${API_URL}/mailbox/${token}`);
       expect(response.status).toBe(200);
 
       const data = await response.json();
@@ -114,16 +114,16 @@ describe('Mailbox Integration Tests', () => {
     });
 
     test('should return 410 for expired mailbox', async () => {
-      const accessToken = 'b'.repeat(64);
+      const token = 'b'.repeat(64);
       await db.collection('mailboxes').insertOne({
         address: 'expired@mediavid.site',
-        accessToken,
+        token,
         expiresAt: new Date(Date.now() - 1000),
         createdAt: new Date(),
         isActive: true,
       });
 
-      const response = await fetch(`${API_URL}/mailbox/${accessToken}`);
+      const response = await fetch(`${API_URL}/mailbox/${token}`);
       expect(response.status).toBe(410);
     });
   });
@@ -135,18 +135,18 @@ describe('Mailbox Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
       });
-      const { accessToken } = await createResponse.json();
+      const { token } = await createResponse.json();
 
-      const originalResponse = await fetch(`${API_URL}/mailbox/${accessToken}`);
+      const originalResponse = await fetch(`${API_URL}/mailbox/${token}`);
       const original = await originalResponse.json();
       const originalExpiry = new Date(original.expiresAt);
 
-      const extendResponse = await fetch(`${API_URL}/mailbox/${accessToken}/extend`, {
+      const extendResponse = await fetch(`${API_URL}/mailbox/${token}/extend`, {
         method: 'PATCH',
       });
       expect(extendResponse.status).toBe(200);
 
-      const newResponse = await fetch(`${API_URL}/mailbox/${accessToken}`);
+      const newResponse = await fetch(`${API_URL}/mailbox/${token}`);
       const updated = await newResponse.json();
       const newExpiry = new Date(updated.expiresAt);
 
@@ -161,14 +161,14 @@ describe('Mailbox Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
       });
-      const { accessToken } = await createResponse.json();
+      const { token } = await createResponse.json();
 
-      const deleteResponse = await fetch(`${API_URL}/mailbox/${accessToken}`, {
+      const deleteResponse = await fetch(`${API_URL}/mailbox/${token}`, {
         method: 'DELETE',
       });
       expect(deleteResponse.status).toBe(200);
 
-      const getResponse = await fetch(`${API_URL}/mailbox/${accessToken}`);
+      const getResponse = await fetch(`${API_URL}/mailbox/${token}`);
       expect(getResponse.status).toBe(404);
     });
   });
@@ -180,9 +180,9 @@ describe('Mailbox Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
       });
-      const { accessToken } = await createResponse.json();
+      const { token } = await createResponse.json();
 
-      const response = await fetch(`${API_URL}/mailbox/${accessToken}/emails`);
+      const response = await fetch(`${API_URL}/mailbox/${token}/emails`);
       expect(response.status).toBe(200);
 
       const data = await response.json();
@@ -196,9 +196,9 @@ describe('Mailbox Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
       });
-      const { accessToken, address } = await createResponse.json();
+      const { token, address } = await createResponse.json();
 
-      const mailboxDoc = await db.collection('mailboxes').findOne({ accessToken });
+      const mailboxDoc = await db.collection('mailboxes').findOne({ token });
       expect(mailboxDoc).not.toBeNull();
 
       await db.collection('emails').insertOne({
