@@ -1,4 +1,4 @@
-import { getRedisClient } from './config/redis.js';
+import { getRedisClient } from '../src/config/redis.js';
 
 /**
  * Script para limpar dados antigos do Redis/Upstash

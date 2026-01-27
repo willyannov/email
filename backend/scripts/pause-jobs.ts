@@ -1,7 +1,7 @@
-import { getRedisClient } from './config/redis.js';
-import { cleanupQueue } from './jobs/cleanup.job.js';
-import { indexerQueue } from './jobs/indexer.job.js';
-import { orphanCleanupQueue } from './jobs/orphan-cleanup.job.js';
+import { getRedisClient } from '../src/config/redis.js';
+import { cleanupQueue } from '../src/jobs/cleanup.job.js';
+import { indexerQueue } from '../src/jobs/indexer.job.js';
+import { orphanCleanupQueue } from '../src/jobs/orphan-cleanup.job.js';
 
 /**
  * Script para pausar todos os jobs/queues

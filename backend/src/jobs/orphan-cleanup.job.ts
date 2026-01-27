@@ -96,11 +96,6 @@ export const orphanCleanupWorker = new Worker(
   {
     connection: getRedisClient(),
     concurrency: 1,
-    // Reduzir polling no Redis
-    settings: {
-      stalledInterval: 60000, // 1 minuto
-      maxStalledCount: 1,
-    },
   }
 );
 

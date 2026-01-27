@@ -86,11 +86,6 @@ export const cleanupWorker = new Worker(
   {
     connection: getRedisClient(),
     concurrency: 1,
-    // Reduzir polling no Redis (padrão é 5 segundos)
-    settings: {
-      stalledInterval: 60000, // 1 minuto (padrão 30s)
-      maxStalledCount: 1,
-    },
   }
 );
 

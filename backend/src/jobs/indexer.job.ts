@@ -32,11 +32,6 @@ export const indexerWorker = new Worker<IndexEmailJob>(
   {
     connection: getRedisClient(),
     concurrency: 5, // Processar até 5 emails simultaneamente
-    // Reduzir polling no Redis
-    settings: {
-      stalledInterval: 60000, // 1 minuto
-      maxStalledCount: 1,
-    },
   }
 );
 
