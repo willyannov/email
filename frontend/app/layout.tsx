@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import { ThemeProviderClient } from "@/components/ThemeProviderClient";
 
 const roboto = Roboto({
   weight: ["400", "500", "700"],
@@ -19,9 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="material">
-      <body className={`${roboto.variable} font-sans bg-base-100 text-base-content min-h-screen`}>
-        {children}
+    <html lang="en" data-theme="dark">
+      <body className={`${roboto.variable} font-sans min-h-screen`}>
+        <ThemeProviderClient>
+          {children}
+        </ThemeProviderClient>
       </body>
     </html>
   );

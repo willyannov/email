@@ -1,5 +1,7 @@
-import MailboxView from "@/components/mailbox/MailboxView";
+'use client';
+
+import { MailboxViewV2 } from '@/components-v2/mailbox/MailboxViewV2';
 
 export default function MailboxPage({ params }: { params: { token: string } }) {
-  return <MailboxView token={params.token} />;
+  return <MailboxViewV2 token={params.token} />;
 }

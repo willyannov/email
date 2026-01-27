@@ -1,0 +1,72 @@
+/* ========================================
+   TEMA DARK CYBERPUNK
+   ======================================== */
+
+:root[data-theme="dark"] {
+  --bg-primary: #151515;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #1f1f1f;
+  --bg-hover: #252525;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #6b6b6b;
+  
+  --border-color: #2a2a2a;
+  --border-hover: #3a3a3a;
+  
+  --accent-primary: #00ff41;
+  --accent-secondary: #00cc34;
+  --accent-glow: rgba(0, 255, 65, 0.3);
+  
+  --danger: #ff4444;
+  --warning: #ffaa00;
+  --success: #00ff41;
+}
+
+/* ========================================
+   TEMA LIGHT MINIMAL
+   ======================================== */
+
+:root[data-theme="light"] {
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-card: #fafafa;
+  --bg-hover: #f0f0f0;
+  
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6b6b;
+  --text-muted: #9b9b9b;
+  
+  --border-color: #e0e0e0;
+  --border-hover: #d0d0d0;
+  
+  --accent-primary: #00b32d;
+  --accent-secondary: #009624;
+  --accent-glow: rgba(0, 179, 45, 0.2);
+  
+  --danger: #d32f2f;
+  --warning: #f57c00;
+  --success: #00b32d;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.bg-primary { background-color: var(--bg-primary); }
+.bg-secondary { background-color: var(--bg-secondary); }
+.bg-card { background-color: var(--bg-card); }
+
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+
+.border-themed { border-color: var(--border-color); }
+
+.neon-glow {
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.neon-glow-lg {
+  box-shadow: 0 0 40px var(--accent-glow);
+}

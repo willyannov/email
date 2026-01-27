@@ -4,11 +4,52 @@ const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components-v2/**/*.{js,ts,jsx,tsx,mdx}", // ⭐ ADICIONAR ESTA LINHA
   ],
   theme: {
     extend: {
       fontFamily: {
         sans: ["var(--font-roboto)", "sans-serif"],
+        inter: ["var(--font-inter)", "sans-serif"], // ⭐ ADICIONAR
+      },
+      // ⭐ ADICIONAR ESTAS CORES (não sobrescreve as existentes do daisyUI)
+      colors: {
+        // Tema Dark Cyberpunk
+        dark: {
+          bg: {
+            primary: '#0a0a0a',
+            secondary: '#1a1a1a',
+            card: '#151515',
+          },
+          text: {
+            primary: '#ffffff',
+            secondary: '#a0a0a0',
+          },
+          border: '#2a2a2a',
+        },
+        // Tema Light
+        light: {
+          bg: {
+            primary: '#f5f5f5',
+            secondary: '#ffffff',
+            card: '#fafafa',
+          },
+          text: {
+            primary: '#1a1a1a',
+            secondary: '#6b6b6b',
+          },
+          border: '#e0e0e0',
+        },
+        // Verde Neon
+        neon: {
+          green: '#00ff41',
+          'green-dark': '#00cc34',
+          glow: '#00ff4180',
+        },
+      },
+      boxShadow: {
+        neon: '0 0 20px rgba(0, 255, 65, 0.3)',
+        'neon-lg': '0 0 40px rgba(0, 255, 65, 0.5)',
       },
       borderRadius: {
         '4xl': '2rem',

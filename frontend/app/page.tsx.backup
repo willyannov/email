@@ -1,0 +1,105 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { apiClient } from "@/services/api";
+import { Loader2, Mail, Shield, Zap, Plus, ArrowRight } from "lucide-react";
+
+export default function Home() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [customPrefix, setCustomPrefix] = useState("");
+
+  const handleCreateMailbox = async () => {
+    try {
+      setLoading(true);
+      const mailbox = await apiClient.createMailbox({
+        customPrefix: customPrefix || undefined,
+      });
+      router.push(`/${mailbox.token}`);
+    } catch (error) {
+      alert("Failed to create mailbox. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-base-100">
+      <div className="max-w-4xl w-full space-y-12">
+        {/* Hero Section */}
+        <div className="text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-base-200 text-sm font-medium text-primary mb-4">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+            </span>
+            Material Design 3 Enabled
+          </div>
+          
+          <h1 className="text-6xl md:text-7xl font-bold tracking-tight text-base-content">
+            Temp<span className="text-primary">Mail</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-base-content/70 max-w-2xl mx-auto font-light leading-relaxed">
+            Anonymous, secure, and disposable email addresses powered by modern web technologies.
+          </p>
+        </div>
+
+        {/* Action Card */}
+        <div className="card w-full max-w-lg mx-auto bg-base-200/50 backdrop-blur-sm shadow-none border-none rounded-[2.5rem] p-2">
+          <div className="card-body p-8">
+            <div className="flex flex-col gap-6">
+              <div className="form-control w-full">
+                <label className="label px-1">
+                  <span className="label-text text-base font-medium text-base-content/80">Custom Prefix (Optional)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. my-project-test"
+                  className="input input-lg w-full bg-base-100 border-none focus:ring-2 focus:ring-primary/20 rounded-2xl transition-all"
+                  value={customPrefix}
+                  onChange={(e) => setCustomPrefix(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              
+              <button
+                className="btn btn-primary btn-lg w-full rounded-full text-lg font-medium h-16 shadow-none hover:shadow-lg transition-all gap-3"
+                onClick={handleCreateMailbox}
+                disabled={loading}
+              >
+                {loading ? (
+                  <Loader2 className="animate-spin w-6 h-6" />
+                ) : (
+                  <>
+                    Create Mailbox
+                    <ArrowRight className="w-6 h-6" />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
+          {[
+            { icon: Shield, title: "Private", desc: "No personal data required. End-to-end privacy." },
+            { icon: Zap, title: "Real-time", desc: "Instant delivery via WebSocket connection." },
+            { icon: Mail, title: "Disposable", desc: "Auto-expiring addresses for safety." },
+          ].map((feature, idx) => (
+            <div key={idx} className="card bg-base-200/30 border-none rounded-[2rem] hover:bg-base-200 transition-colors duration-300">
+              <div className="card-body items-center text-center p-8">
+                <div className="w-16 h-16 rounded-2xl bg-base-100 flex items-center justify-center mb-4 text-primary">
+                  <feature.icon className="w-8 h-8" />
+                </div>
+                <h3 className="card-title text-xl font-bold">{feature.title}</h3>
+                <p className="text-base-content/60 font-medium">{feature.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}
