@@ -15,8 +15,8 @@
   --border-color: #2a2a2a;
   --border-hover: #3a3a3a;
   
-  --accent-primary: #00ff41;
-  --accent-secondary: #00cc34;
+  --accent-primary: #1d0588;
+  --accent-secondary: #160172;
   --accent-glow: rgba(0, 255, 65, 0.3);
   
   --danger: #ff4444;
@@ -41,8 +41,8 @@
   --border-color: #e0e0e0;
   --border-hover: #d0d0d0;
   
-  --accent-primary: #00b32d;
-  --accent-secondary: #009624;
+  --accent-primary: #1d0588;
+  --accent-secondary: #160172;
   --accent-glow: rgba(0, 179, 45, 0.2);
   
   --danger: #d32f2f;

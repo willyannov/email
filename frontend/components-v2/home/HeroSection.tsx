@@ -58,13 +58,7 @@ export const HeroSection = () => {
 
       {/* Center Content */}
       <div className="relative z-10 flex-1 flex items-center justify-center">
-        <div className="w-full max-w-4xl space-y-6">
-          <div className="text-center mb-8">
-            <p className="text-lg md:text-xl text-[var(--text-secondary)]">
-              Emails temporários seguros e anônimos. Autodestruição automática.
-            </p>
-          </div>
-          
+        <div className="w-full max-w-4xl space-y-6">    
           <CreateMailboxCard />
         </div>
       </div>
