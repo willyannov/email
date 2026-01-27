@@ -105,12 +105,12 @@ export async function scheduleCleanupJob() {
     {},
     {
       repeat: {
-        pattern: '0 */1,30 * * *', // A cada 1h30 (16x por dia)
+        pattern: '0 */2 * * *', // A cada 2 horas (12x por dia)
       },
       removeOnComplete: 1, // Manter apenas último job completo
       removeOnFail: 3, // Manter últimos 3 jobs falhos
     }
   );
   
-  console.log('✅ Job de cleanup agendado (executa a cada 1h30)');
+  console.log('✅ Job de cleanup agendado (executa a cada 2 horas)');
 }
