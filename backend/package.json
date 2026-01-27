@@ -9,7 +9,13 @@
     "build": "tsc",
     "build:bun": "bun build src/server.ts --outdir=dist --target=bun",
     "start": "node dist/server.js",
-    "start:bun": "bun dist/server.js"
+    "start:bun": "bun dist/server.js",
+    "clean-redis": "bun run scripts/clean-redis.ts",
+    "clean-redis:node": "tsx scripts/clean-redis.ts",
+    "pause-jobs": "bun run scripts/pause-jobs.ts",
+    "pause-jobs:node": "tsx scripts/pause-jobs.ts",
+    "resume-jobs": "bun run scripts/resume-jobs.ts",
+    "resume-jobs:node": "tsx scripts/resume-jobs.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^10.2.0",

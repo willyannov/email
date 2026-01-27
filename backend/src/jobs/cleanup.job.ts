@@ -86,6 +86,11 @@ export const cleanupWorker = new Worker(
   {
     connection: getRedisClient(),
     concurrency: 1,
+    // Reduzir polling no Redis (padrão é 5 segundos)
+    settings: {
+      stalledInterval: 60000, // 1 minuto (padrão 30s)
+      maxStalledCount: 1,
+    },
   }
 );
 
@@ -105,10 +110,12 @@ export async function scheduleCleanupJob() {
     {},
     {
       repeat: {
-        pattern: '*/5 * * * *', // A cada 5 minutos (12x por hora)
+        pattern: '0 */1,30 * * *', // A cada 1h30 (16x por dia)
       },
-      removeOnComplete: 5, // Manter últimos 5 jobs completos (economizar Redis)
-      removeOnFail: 10, // Manter últimos 10 jobs falhos
+      removeOnComplete: 1, // Manter apenas último job completo
+      removeOnFail: 3, // Manter últimos 3 jobs falhos
     }
   );
+  
+  console.log('✅ Job de cleanup agendado (executa a cada 1h30)');
 }

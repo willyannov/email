@@ -142,3 +142,4 @@ playwright/.cache/
 # Figma exports (optional - já temos em logs/)
 logs/figma-raw.json
 logs/figma-simplified.json
+test-email-generator.ts

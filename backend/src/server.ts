@@ -138,14 +138,23 @@ async function startServer() {
           console.error('⚠️ Erro ao configurar Meilisearch:', err)
         );
         
-        // Inicializar Bull workers e agendar jobs
-        scheduleCleanupJob().catch(err => 
-          console.error('⚠️ Erro ao inicializar job de cleanup:', err)
-        );
+        // Inicializar Bull workers e agendar jobs (apenas se ENABLE_JOBS=true)
+        const enableJobs = process.env.ENABLE_JOBS !== 'false'; // true por padrão
         
-        scheduleOrphanCleanupJob().catch(err => 
-          console.error('⚠️ Erro ao inicializar job de limpeza de órfãos:', err)
-        );
+        if (enableJobs) {
+          scheduleCleanupJob().catch(err => 
+            console.error('⚠️ Erro ao inicializar job de cleanup:', err)
+          );
+          
+          scheduleOrphanCleanupJob().catch(err => 
+            console.error('⚠️ Erro ao inicializar job de limpeza de órfãos:', err)
+          );
+          
+          console.log('✅ Jobs em background ativados');
+        } else {
+          console.log('⏸️ Jobs em background desabilitados (ENABLE_JOBS=false)');
+          console.log('💡 Para ativar, defina ENABLE_JOBS=true no .env');
+        }
         
         // Inicializar servidor SMTP (opcional - pode falhar se porta bloqueada)
         try {

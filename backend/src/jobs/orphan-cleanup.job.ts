@@ -96,6 +96,11 @@ export const orphanCleanupWorker = new Worker(
   {
     connection: getRedisClient(),
     concurrency: 1,
+    // Reduzir polling no Redis
+    settings: {
+      stalledInterval: 60000, // 1 minuto
+      maxStalledCount: 1,
+    },
   }
 );
 
@@ -117,12 +122,12 @@ export async function scheduleOrphanCleanupJob() {
     {},
     {
       repeat: {
-        pattern: '0 * * * *', // A cada hora no minuto 0
+        pattern: '0 */8 * * *', // A cada 8 horas (3x por dia)
       },
-      removeOnComplete: 3, // Manter últimos 3 jobs
-      removeOnFail: 5, // Manter últimos 5 falhos
+      removeOnComplete: 1, // Manter apenas último job
+      removeOnFail: 2, // Manter últimos 2 falhos
     }
   );
   
-  console.log('✅ Job de limpeza de anexos órfãos agendado (executa a cada hora)');
+  console.log('✅ Job de limpeza de anexos órfãos agendado (executa a cada 8 horas)');
 }

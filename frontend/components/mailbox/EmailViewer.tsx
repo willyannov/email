@@ -29,7 +29,7 @@ export function EmailViewer({ token }: { token: string }) {
       setOriginalEmails(list.emails);
       setSelectedEmail(null);
     } catch (e) {
-      console.error(e);
+      // Error deleting email
     }
   };
 

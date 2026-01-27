@@ -19,14 +19,12 @@ export default function MailboxView({ token }: { token: string }) {
 
     const refreshEmails = async () => {
       try {
-        console.log("🔄 Refreshing emails list...");
         const list = await apiClient.listEmails(activeToken);
         if (cancelled) return;
-        console.log(`✅ Emails refreshed: ${list.emails.length} emails found`);
         setEmails(list.emails);
         setOriginalEmails(list.emails);
       } catch (e) {
-        console.error("❌ Error refreshing emails:", e);
+        // Error refreshing emails
       }
     };
 
@@ -41,32 +39,23 @@ export default function MailboxView({ token }: { token: string }) {
 
         await refreshEmails();
 
-        console.log(`🔌 Connecting WebSocket for token: ${activeToken}`);
         wsClient.connect(activeToken, (msg) => {
-          console.log("📨 WebSocket message received in View:", msg);
           if (msg.type === "connected") {
-            console.log("✅ WebSocket connected event received");
             refreshEmails();
             return;
           }
           if (msg.type === "new_email") {
-            console.log("📧 New email notification received via WS");
             refreshEmails();
           }
         });
       } catch (e) {
-        console.error("Failed to load mailbox", e);
+        // Failed to load mailbox
       }
     };
     init();
 
-    const interval = setInterval(() => {
-      refreshEmails();
-    }, 5000);
-
     return () => {
       cancelled = true;
-      clearInterval(interval);
       wsClient.disconnect();
     };
   }, [token]);

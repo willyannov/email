@@ -24,7 +24,6 @@ class WebSocketClient {
     // Se já temos uma conexão ativa com o mesmo token, apenas adiciona o handler
     if (this.ws && this.token === token) {
       if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
-        console.log('🔄 WebSocket já conectado/conectando para este token, reutilizando conexão');
         if (onMessage && !this.messageHandlers.includes(onMessage)) {
           this.messageHandlers.push(onMessage);
         }
@@ -34,7 +33,6 @@ class WebSocketClient {
 
     // Se temos uma conexão com token diferente ou não está fechada, desconecta primeiro
     if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
-      console.log('🔄 Desconectando WebSocket anterior antes de criar nova conexão');
       this.disconnect();
     }
 
@@ -53,13 +51,10 @@ class WebSocketClient {
     const wsHost = apiUrl.replace(/^https?:\/\//, '').replace('/api', '');
     const wsUrl = `${wsProtocol}://${wsHost}/ws/mailbox/${token}`;
     
-    console.log('🔌 Connecting WebSocket for token:', token);
-    
     try {
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {
-        console.log('✅ WebSocket connected');
         this.reconnectAttempts = 0;
         this.startHeartbeat();
       };
@@ -69,16 +64,15 @@ class WebSocketClient {
           const message: WebSocketMessage = JSON.parse(event.data);
           this.handleMessage(message);
         } catch (error) {
-          console.error('Failed to parse WebSocket message:', error);
+          // Failed to parse WebSocket message
         }
       };
 
       this.ws.onerror = (error) => {
-        console.error('❌ WebSocket error:', error);
+        // WebSocket error
       };
 
       this.ws.onclose = (event) => {
-        console.log('🔌 WebSocket closed:', event.code, event.reason);
         this.stopHeartbeat();
         this.ws = null;
         
@@ -88,7 +82,6 @@ class WebSocketClient {
         }
       };
     } catch (error) {
-      console.error('Failed to create WebSocket connection:', error);
       this.scheduleReconnect();
     }
   }
@@ -114,8 +107,6 @@ class WebSocketClient {
   send(message: any): void {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
-    } else {
-      console.warn('WebSocket not connected, cannot send message');
     }
   }
 
@@ -156,7 +147,7 @@ class WebSocketClient {
       try {
         handler(message);
       } catch (error) {
-        console.error('Error in message handler:', error);
+        // Error in message handler
       }
     });
   }
@@ -166,18 +157,14 @@ class WebSocketClient {
    */
   private scheduleReconnect(): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error('Max reconnection attempts reached');
       return;
     }
 
     this.reconnectAttempts++;
     const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
 
-    console.log(`⏳ Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
-
     setTimeout(() => {
       if (this.token && !this.isManualClose) {
-        console.log('🔄 Attempting to reconnect...');
         this.connect(this.token);
       }
     }, delay);

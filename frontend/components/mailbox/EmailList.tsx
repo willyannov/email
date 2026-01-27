@@ -44,7 +44,7 @@ export function EmailList({ token }: { token: string }) {
       setSelectedEmail(detail);
       updateEmailInList(emailId, { isRead: true });
     } catch (e) {
-      console.error("Failed to load email detail", e);
+      // Failed to load email detail
     } finally {
       setLoadingEmailDetail(false);
     }

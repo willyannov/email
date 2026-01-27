@@ -18,7 +18,6 @@ export default function Home() {
       });
       router.push(`/${mailbox.token}`);
     } catch (error) {
-      console.error("Failed to create mailbox", error);
       alert("Failed to create mailbox. Please try again.");
     } finally {
       setLoading(false);

@@ -51,7 +51,7 @@ export function MailboxHeader({ token }: { token: string }) {
       setEmails(emailList.emails);
       setOriginalEmails(emailList.emails);
     } catch (e) {
-      console.error("Failed to refresh mailbox:", e);
+      // Failed to refresh mailbox
     } finally {
       setIsRefreshing(false);
     }

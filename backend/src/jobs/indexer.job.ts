@@ -32,6 +32,11 @@ export const indexerWorker = new Worker<IndexEmailJob>(
   {
     connection: getRedisClient(),
     concurrency: 5, // Processar até 5 emails simultaneamente
+    // Reduzir polling no Redis
+    settings: {
+      stalledInterval: 60000, // 1 minuto
+      maxStalledCount: 1,
+    },
   }
 );
 
@@ -47,9 +52,9 @@ indexerWorker.on('failed', (job, err) => {
 // Função auxiliar para adicionar email à fila de indexação
 export async function queueEmailForIndexing(email: Email) {
   await indexerQueue.add('index-email', { email }, {
-    removeOnComplete: 10, // Reduzido de 100 para 10 (economizar memória Upstash)
-    removeOnFail: 20, // Reduzido de 50 para 20
-    attempts: 3,
+    removeOnComplete: true, // Remover imediatamente após conclusão
+    removeOnFail: 5, // Manter apenas 5 falhas
+    attempts: 2, // Reduzir tentativas de 3 para 2
     backoff: {
       type: 'exponential',
       delay: 2000,
