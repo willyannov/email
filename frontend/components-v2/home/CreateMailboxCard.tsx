@@ -53,10 +53,7 @@ export const CreateMailboxCard = () => {
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
-            <>
-              <Zap className="w-5 h-5" />
-              Gerar Email Agora
-            </>
+            'Acessar Email'
           )}
         </Button>
       </div>
