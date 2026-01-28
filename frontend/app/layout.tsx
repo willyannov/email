@@ -10,7 +10,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "💸 Ta Duro? Dorme!",
+  title: "Ta duro? DORME!",
   description: "Crie seu email temporario @tadurodorme",
   icons: {
     icon: [

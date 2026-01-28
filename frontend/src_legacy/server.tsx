@@ -33,7 +33,7 @@ const server = Bun.serve({
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ta Duro? Dorme! - Sua Privacidade em Primeiro Lugar</title>
+  <title>Ta duro? DORME! - Sua Privacidade em Primeiro Lugar</title>
   <meta name="description" content="Crie um email temporário em segundos. Sem cadastro, sem rastreamento, 100% anônimo.">
   <style>${cssContent}</style>
 </head>

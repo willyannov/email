@@ -73,7 +73,7 @@ export function Home() {
       <footer className="border-t bg-white mt-12 md:mt-16">
         <div className="container mx-auto px-4 py-6 md:py-8">
           <div className="text-center text-xs md:text-sm text-muted-foreground">
-            <p>© 2025 Ta Duro? Dorme! - Email Temporário e Descartável</p>
+            <p>© 2025 Ta duro? DORME! - Email Temporário e Descartável</p>
             <p className="mt-2">Desenvolvido com Bun, React e shadcn/ui</p>
           </div>
         </div>

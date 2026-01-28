@@ -44,7 +44,7 @@ export const HeroSection = () => {
       {/* Header with Logo and Theme Toggle */}
       <div className="relative z-10 flex items-center justify-between mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)]">
-          Ta Duro?<span className="text-[var(--accent-primary)]">DORME!</span>
+          Ta duro?<span className="text-[var(--accent-primary)]">DORME!</span>
         </h1>
         
         <button
