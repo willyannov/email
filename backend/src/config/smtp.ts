@@ -18,7 +18,7 @@ export const SMTP_CONFIG = {
 };
 
 export const EMAIL_DOMAINS = [
-  'mediavid.site',
-  'mail.mediavid.site',
+  'tadurodorme.site',
+  'mail.tadurodorme.site',
   'tempmail.local',  // Para testes locais
 ];

@@ -8,7 +8,7 @@
  * 1. No Cloudflare Dashboard: Email → Email Routing → Email Workers
  * 2. Criar novo Worker e colar este código
  * 3. Configurar variável de ambiente: API_URL = https://seu-dominio.com
- * 4. Criar rota: *@mediavid.site → Este Worker
+ * 4. Criar rota: *@tadurodorme.site → Este Worker
  */
 
 export default {

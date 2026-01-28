@@ -42,7 +42,7 @@ describe('Mailbox Integration Tests', () => {
       expect(data).toHaveProperty('token');
       expect(data).toHaveProperty('address');
       expect(data).toHaveProperty('expiresAt');
-      expect(data.address).toMatch(/@mediavid\.site$/);
+      expect(data.address).toMatch(/@tadurodorme\.site$/);
       expect(data.token).toHaveLength(64);
     });
 
@@ -57,7 +57,7 @@ describe('Mailbox Integration Tests', () => {
       expect(response.status).toBe(201);
       const data = await response.json();
 
-      expect(data.address).toBe(`${customPrefix}@mediavid.site`);
+      expect(data.address).toBe(`${customPrefix}@tadurodorme.site`);
       expect(data.token).toHaveLength(64);
     });
 
@@ -116,7 +116,7 @@ describe('Mailbox Integration Tests', () => {
     test('should return 410 for expired mailbox', async () => {
       const token = 'b'.repeat(64);
       await db.collection('mailboxes').insertOne({
-        address: 'expired@mediavid.site',
+        address: 'expired@tadurodorme.site',
         token,
         expiresAt: new Date(Date.now() - 1000),
         createdAt: new Date(),
