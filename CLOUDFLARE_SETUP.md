@@ -1,12 +1,12 @@
 # Configuração Cloudflare Email Routing
 
-Este guia explica como configurar o Cloudflare Email Routing para receber emails no seu domínio `mediavid.site` e processar no TempMail.
+Este guia explica como configurar o Cloudflare Email Routing para receber emails no seu domínio `mediavid.site` e processar no Ta Duro? Dorme!.
 
 ## 📋 Pré-requisitos
 
 - Domínio `mediavid.site` configurado no Cloudflare
 - Conta Cloudflare (plano Free funciona)
-- Backend TempMail rodando (localmente ou em servidor público)
+- Backend Ta Duro? Dorme! rodando (localmente ou em servidor público)
 
 ## 🔧 Passo 1: Adicionar Domínio ao Cloudflare
 

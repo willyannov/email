@@ -121,7 +121,7 @@ export function Mailbox({ token }: { token: string }) {
             </Button>
             <div className='flex items-center gap-2'>
               <Mail className='h-6 w-6 text-primary shrink-0' />
-              <span className='text-lg font-bold hidden sm:inline'>TempMail</span>
+              <span className='text-lg font-bold hidden sm:inline'>Ta Duro? Dorme!</span>
             </div>
           </div>
           

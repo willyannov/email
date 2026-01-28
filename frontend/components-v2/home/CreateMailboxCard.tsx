@@ -32,7 +32,7 @@ export const CreateMailboxCard = () => {
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
-            Prefixo Customizado (Opcional)
+            Crie seu email temporario @tadurodorme
           </label>
           <Input
             type="text"

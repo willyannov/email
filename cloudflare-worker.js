@@ -2,7 +2,7 @@
  * Cloudflare Email Worker
  * 
  * Este Worker recebe emails via Cloudflare Email Routing
- * e encaminha para sua API TempMail
+ * e encaminha para sua API Ta Duro? Dorme!
  * 
  * Configuração:
  * 1. No Cloudflare Dashboard: Email → Email Routing → Email Workers

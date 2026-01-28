@@ -1,4 +1,4 @@
-# 📧 TempMail - Sistema de Email Temporário
+# � Ta Duro? Dorme! - Sistema de Email Temporário
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Bun](https://img.shields.io/badge/Bun-1.0+-black.svg)

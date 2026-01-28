@@ -38,7 +38,7 @@ export default function Home() {
           </div>
           
           <h1 className="text-6xl md:text-7xl font-bold tracking-tight text-base-content">
-            Temp<span className="text-primary">Mail</span>
+            Ta Duro?<span className="text-primary">DORME!</span>
           </h1>
           <p className="text-xl md:text-2xl text-base-content/70 max-w-2xl mx-auto font-light leading-relaxed">
             Anonymous, secure, and disposable email addresses powered by modern web technologies.
