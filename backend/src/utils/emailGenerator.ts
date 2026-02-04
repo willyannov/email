@@ -7,7 +7,10 @@ const NOMES_FEMININOS = [
   'vanessa', 'leticia', 'bianca', 'barbara', 'daniela', 'roberta', 'adriana', 'raquel',
   'luciana', 'juliana', 'renata', 'michele', 'priscila', 'sabrina', 'tatiana', 'aline',
   'bruna', 'carla', 'debora', 'elaine', 'fabiana', 'gisele', 'heloisa', 'ingrid',
-  'janaina', 'karina'
+  'janaina', 'karina', 'larissa', 'lorena', 'luana', 'luiza', 'marcela', 'marina',
+  'melissa', 'mirella', 'nathalia', 'nicole', 'olivia', 'paola', 'rafaela', 'rebecca',
+  'regina', 'rita', 'rosana', 'sandra', 'silvia', 'simone', 'sonia', 'stefani',
+  'tereza', 'thais', 'viviane', 'yara', 'lais', 'clara'
 ];
 
 const ADJETIVOS_FEMININOS = [
@@ -16,8 +19,11 @@ const ADJETIVOS_FEMININOS = [
   'sublime', 'perfeita', 'adoravel', 'cativante', 'feia', 'horrivel', 'estranha', 'bizarra',
   'exotica', 'diferente', 'peculiar', 'unica', 'rara', 'especial', 'doce', 'meiga',
   'gentil', 'terna', 'carinhosa', 'amorosa', 'querida', 'amada', 'preciosa', 'estimada',
-  'valente', 'corajosa', 'forte', 'destemida', 'audaciosa', 'intrépida', 'heroica', 'brava',
-  'inteligente', 'sagaz'
+  'valente', 'corajosa', 'forte', 'destemida', 'audaciosa', 'intrepida', 'heroica', 'brava',
+  'inteligente', 'sagaz', 'poderosa', 'majestosa', 'gloriosa', 'magnifica', 'brillhante', 'luminosa',
+  'serena', 'tranquila', 'calma', 'pacifica', 'alegre', 'feliz', 'jovial', 'risonha',
+  'vibrante', 'energetica', 'dinamica', 'ativa', 'vivaz', 'animada', 'criativa', 'talentosa',
+  'determinada', 'persistente', 'resiliente', 'firme'
 ];
 
 /**
