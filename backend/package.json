@@ -15,7 +15,9 @@
     "pause-jobs": "bun run scripts/pause-jobs.ts",
     "pause-jobs:node": "tsx scripts/pause-jobs.ts",
     "resume-jobs": "bun run scripts/resume-jobs.ts",
-    "resume-jobs:node": "tsx scripts/resume-jobs.ts"
+    "resume-jobs:node": "tsx scripts/resume-jobs.ts",
+    "rotate-redis": "bun run scripts/rotate-redis.ts",
+    "rotate-redis:node": "tsx scripts/rotate-redis.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^10.2.0",

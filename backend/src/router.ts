@@ -16,6 +16,7 @@ import { handleCloudflareEmail } from './routes/webhook.routes.js';
 import { corsMiddleware, addCorsHeaders } from './middleware/cors.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { WebSocketService } from './services/websocket.service.js';
+import { getRedisInfo, rotateRedisUrl } from './config/redis.js';
 
 export function createRouter(wsService?: WebSocketService) {
   return async function handleRequest(req: Request): Promise<Response> {
@@ -126,6 +127,24 @@ export function createRouter(wsService?: WebSocketService) {
       if (route === 'webhook/cloudflare-email' && method === 'POST') {
         const response = await handleCloudflareEmail(req, wsService);
         return addCorsHeaders(response, origin);
+      }
+
+      // Redis management routes (admin)
+      if (route === 'admin/redis/info' && method === 'GET') {
+        const info = getRedisInfo();
+        return addCorsHeaders(Response.json(info), origin);
+      }
+
+      if (route === 'admin/redis/rotate' && method === 'POST') {
+        await rotateRedisUrl();
+        const info = getRedisInfo();
+        return addCorsHeaders(
+          Response.json({ 
+            message: 'Redis URL rotacionada com sucesso',
+            ...info 
+          }),
+          origin
+        );
       }
 
       return addCorsHeaders(
