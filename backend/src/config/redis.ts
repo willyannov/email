@@ -141,22 +141,10 @@ export function getRedisClient(): Redis {
   }
 
   return redisClient;
-}const maskedUrls = REDIS_URLS.map((url, i) => {
-    const isCurrent = i === currentUrlIndex;
-    // Mascarar senha na URL
-    const masked = url.replace(/:([^@]+)@/, ':****@');
-    return {
-      index: i + 1,
-      url: masked,
-      active: isCurrent,
-    };
-  });
+}
 
-  return {
-    totalUrls: REDIS_URLS.length,
-    currentIndex: currentUrlIndex + 1,
-    connectionAttempts,
-    urls: maskedUrl
+export async function closeRedisConnection() {
+  if (redisClient) {
     await redisClient.quit();
     redisClient = null;
   }
@@ -181,9 +169,21 @@ export async function rotateRedisUrl(): Promise<void> {
  * Retorna informações sobre as URLs configuradas
  */
 export function getRedisInfo() {
+  const maskedUrls = REDIS_URLS.map((url, i) => {
+    const isCurrent = i === currentUrlIndex;
+    // Mascarar senha na URL
+    const masked = url.replace(/:([^@]+)@/, ':****@');
+    return {
+      index: i + 1,
+      url: masked,
+      active: isCurrent,
+    };
+  });
+
   return {
     totalUrls: REDIS_URLS.length,
     currentIndex: currentUrlIndex + 1,
     connectionAttempts,
+    urls: maskedUrls,
   };
 }
