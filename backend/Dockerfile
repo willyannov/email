@@ -15,11 +15,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar package files
-COPY package.json ./
+COPY package.json package-lock.json ./
 COPY tsconfig.json ./
 
 # Instalar dependências (incluindo devDependencies para build)
-RUN npm install
+RUN npm ci
 
 # Copiar código fonte
 COPY src ./src
@@ -39,11 +39,11 @@ RUN apt-get update && apt-get install -y \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar apenas package.json e package-lock.json (se existir)
-COPY package.json ./
+# Copiar package files
+COPY package.json package-lock.json ./
 
 # Instalar apenas production dependencies
-RUN npm install --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Copiar código compilado do stage anterior
 COPY --from=builder /app/dist ./dist
